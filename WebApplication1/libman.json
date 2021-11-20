@@ -1,0 +1,15 @@
+{
+  "version": "1.0",
+  "defaultProvider": "jsdelivr",
+  "libraries": [
+    {
+      "library": "jquery-ui@1.13.0",
+      "destination": "wwwroot/lib/bootstrap/dist/js/jquery-ui/"
+    },
+    {
+      "provider": "cdnjs",
+      "library": "bootstrap-combobox@1.2.0",
+      "destination": "wwwroot/lib/bootstrap/dist/css/bootstrap-combobox/"
+    }
+  ]
+}

@@ -1,0 +1,17 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+
+<div class="text-center">
+    <h1 class="display-4">Welcome</h1>
+    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+</div>
+
+@if (User.Identity.IsAuthenticated)
+{
+    <b class="Username">Welcome, @User.Identity.Name!</b>
+    <form method="post" asp-controller="Account" asp-action="Logout">
+        <input type="submit" value="Выход" />
+    </form>
+}
+<a class="btn btn1 btn-rounded" href="/RegistrateSchool/RegistrateSchool">Click here to get all collections</a>
