@@ -24,5 +24,7 @@ namespace WebApplication1.ViewModels
         [DataType(DataType.Password)]
         [Display(Name = "Пароль")]
         public string Password { get; set; }
+
+        public string Position { get; set; }
     }
 }

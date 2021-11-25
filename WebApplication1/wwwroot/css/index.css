@@ -1,0 +1,55 @@
+﻿body {
+    background-image: url("https://res.cloudinary.com/dwigle/image/upload/v1637874830/images/background62_idvqrs.jpg");
+    background-size: cover;
+}
+
+.btn {
+    padding: 10px 29px;
+    overflow: hidden;
+    color: white;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    border-width: 0;
+    outline: none;
+    cursor: pointer;
+}
+
+.btn1 {
+    font-size: 16px;
+    width: 300px;
+    background: #E9967A;
+    text-shadow: black 0.1em 0.1em 0.2em;
+}
+
+.btn:hover {
+    color: #bdbcb9;
+    box-shadow: 5px 5px 0 #0f0f0e;
+}
+.navbar-brand {
+    text-transform: uppercase;
+    font-size: 24px;
+    text-shadow: black 0.1em 0.1em 0.2em;
+    color: white;
+    vertical-align: bottom;
+    margin: 0 20px;
+}
+.Username {
+    text-transform: uppercase;
+    font-size: 24px;
+    text-shadow: black 0.1em 0.1em 0.2em;
+    color: white;
+    vertical-align: bottom;
+    margin: 0 20px;
+}
+
+.set {
+    display: inline-block;
+}
+
+.contain {
+    background-color: rgba(23, 22, 22, 0.8);
+}
+
+td, th {
+    color: white;
+}

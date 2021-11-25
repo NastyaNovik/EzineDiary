@@ -1,17 +1,43 @@
 ﻿@{
     ViewData["Title"] = "Home Page";
 }
-
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>
-
+<link rel="stylesheet" type="text/css" href="~/css/font-awesome/css/font-awesome.css" />
+<link rel="stylesheet" type="text/css" href="~/css/index.css" />
+@if (!User.Identity.IsAuthenticated)
+{
+    <div class="text-center">
+        <h1 class="display-4">
+            Добро пожаловать в систему электронных журналов и дневников!
+        </h1>
+    </div>
+}
 @if (User.Identity.IsAuthenticated)
 {
-    <b class="Username">Welcome, @User.Identity.Name!</b>
-    <form method="post" asp-controller="Account" asp-action="Logout">
-        <input type="submit" value="Выход" />
-    </form>
+   
+    @if (User.IsInRole("admin"))
+    {
+        <a class="btn btn1 btn-rounded" href="/RegistrateSchool/RegistrateSchool">Зарегистрировать новую школу</a>
+        <div class="contain">
+            <table class="table">
+                <tr><td><b style="font-size:24px; text-transform:uppercase; color:white;margin:0 15px">Школа</b></td><td><b style="font-size:24px; text-transform:uppercase; color:white;margin:0 15px">Директор</b></td></tr>
+                @foreach (var item in ViewBag.schoolDirectors)
+                {
+                    <tr>
+                        <td style="vertical-align: top; font-size: 20px; text-transform: uppercase; color: white; margin: 0 15px">
+                            @item.SchoolName
+                        </td>
+                        <td style="vertical-align: top; font-size: 20px; text-transform: uppercase; color: white; margin: 0 15px">
+                            @item.LastName @item.Name @item.SecondName
+                        </td>
+                        <td>
+                        <td width="300"><img src="@item.ImageUrl" class="img-fluid" width="300" /></td>
+                    </tr>
+                }
+            </table>
+        </div>
+    }
+    @if (User.IsInRole("administration"))
+    {
+        <a class="btn btn1 btn-rounded" href="/Employee/RegisterTeachersAdministration">Registr</a>
+    }
 }
-<a class="btn btn1 btn-rounded" href="/RegistrateSchool/RegistrateSchool">Click here to get all collections</a>

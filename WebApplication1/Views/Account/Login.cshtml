@@ -100,11 +100,11 @@
             <form class="form-horizontal" asp-route-returnUrl="@Model.ReturnUrl" method="post" asp-controller="Account" asp-action="Login">
                 <div class="form-group">
                     <label>Username</label>
-                    <input class="form-control" asp-for="UserName" placeholder="email address">
+                    <input class="form-control" asp-for="UserName" placeholder="Имя пользователя">
                 </div>
                 <div class="form-group">
                     <label asp-for="Password"></label>
-                    <input class="form-control" asp-for="Password" type="password" placeholder="password">
+                    <input class="form-control" asp-for="Password" type="password" placeholder="Пароль">
                 </div>
                 <button type="submit" class="btn btn-default">Login</button>
             </form>

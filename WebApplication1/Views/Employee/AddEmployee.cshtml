@@ -1,0 +1,59 @@
+﻿@model WebApplication1.ViewModels.AddEmployeeViewModel
+<html>
+<head>
+    <link src="~/lib/dist/jquery-ui/themes/base/all.css" rel="stylesheet" type="text/css" />
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.13.0/themes/base/jquery-ui.css">
+</head>
+<body>
+    <form method="post" asp-controller="Employee" asp-action="AddEmployee" asp-route-position="@ViewBag.position" enctype="multipart/form-data">
+        <div asp-validation-summary="ModelOnly"></div>
+        <div class="row" style="position: relative;">
+            <div class="form-group ui-widget col-xl-11">
+                <label asp-for="LastName"></label><br />
+                <input class="form-control" asp-for="LastName" />
+                <span asp-validation-for="LastName"></span>
+            </div>
+            <div class="form-group ui-widget col-xl-11">
+                <label asp-for="Name"></label><br />
+                <input class="form-control" asp-for="Name" />
+                <span asp-validation-for="Name"></span>
+            </div>
+            <div class="form-group ui-widget col-xl-11">
+                <label asp-for="SecondName"></label><br />
+                <input class="form-control" asp-for="SecondName" />
+                <span asp-validation-for="SecondName"></span>
+            </div>
+            <div class="form-group ui-widget col-xl-11">
+                <label asp-for="PhoneNumber"></label><br />
+                <input class="form-control" asp-for="PhoneNumber" />
+                <span asp-validation-for="PhoneNumber"></span>
+            </div>
+            <div class="form-group ui-widget col-xl-11">
+                <label asp-for="AdditionalInformation"></label><br />
+                <input class="form-control" asp-for="AdditionalInformation" />
+                <span asp-validation-for="AdditionalInformation"></span>
+            </div>
+
+            <div class="form-group">
+                <label>Предмет</label><br />
+                <select class="form-control" multiple name="subjects">
+                    @foreach (var subject in ViewBag.Subjects)
+                    {
+                        <option>@subject.Name</option>
+                    }
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Здесь можно добавить фото</label>
+                <div class="border border-secondary">
+                    <input type="file" size="60" name="uploadedFile" asp-for="ImageUrl" /><br>
+                </div>
+            </div>
+        </div>
+        <div>
+            <input type="submit" value="Сохранить" />
+        </div>
+
+    </form>
+</body>
+</html>

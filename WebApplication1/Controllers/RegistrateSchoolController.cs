@@ -34,27 +34,31 @@ namespace WebApplication1.Controllers
 
         public async Task <IActionResult> Register(RegistrateSchoolViewModel model)
         {
-            RegisteredSchool school = new RegisteredSchool { Name = model.Name };
-            db.RegistratedSchools.Add(school);
-            await db.SaveChangesAsync();
-            if (ModelState.IsValid)
+            int count = db.RegistratedSchools.Where(a => a.Name == model.Name).Count();
+            if (count == 0)
             {
-                User user = new User { Email = model.Email, UserName = model.UserName };
-                var result = await _userManager.CreateAsync(user, model.Password);
-                if (result.Succeeded)
+                RegisteredSchool school = new RegisteredSchool { Name = model.Name };
+                db.RegistratedSchools.Add(school);
+                await db.SaveChangesAsync();
+                if (ModelState.IsValid)
                 {
-                    await _userManager.AddToRoleAsync(user, "administration");
-                    return RedirectToAction("Index", "Home");
-                }
-                else
-                {
-                    foreach (var error in result.Errors)
+                    User user = new User { Email = model.Email, UserName = model.UserName, SchoolId = school.Id };
+                    var result = await _userManager.CreateAsync(user, model.Password);
+                    if (result.Succeeded)
                     {
-                        ModelState.AddModelError(string.Empty, error.Description);
+                        await _userManager.AddToRoleAsync(user, "administration");
+                        return RedirectToAction("AddEmployee", "Employee", new { position = model.Position });
+                    }
+                    else
+                    {
+                        foreach (var error in result.Errors)
+                        {
+                            ModelState.AddModelError(string.Empty, error.Description);
+                        }
                     }
                 }
             }
-            return View();
+            return RedirectToAction("RegistrateSchool");
         }
     }
 }

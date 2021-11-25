@@ -6,8 +6,21 @@ using System.Threading.Tasks;
 
 namespace WebApplication1.ViewModels
 {
-    public class AddEmployeeViewModel
+    public class RegistrateTeacherAdministration
     {
+        [Required]
+        [Display(Name = "Имя пользователя")]
+        public string UserName { get; set; }
+
+        [Required]
+        [Display(Name = "Email")]
+        public string Email { get; set; }
+
+        [Required]
+        [DataType(DataType.Password)]
+        [Display(Name = "Пароль")]
+        public string Password { get; set; }
+
         [Required]
         [Display(Name = "Фамилия")]
         public string LastName { get; set; }
