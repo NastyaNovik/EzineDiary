@@ -17,7 +17,7 @@ namespace WebApplication1.Controllers
         private readonly SignInManager<User> _signInManager;
         private ApplicationContext db;
         IWebHostEnvironment _appEnvironment;
-        public RegistrateSchoolController(ApplicationContext context, IWebHostEnvironment appEnvironment,UserManager<User> userManager, SignInManager<User> signInManager)
+        public RegistrateSchoolController(ApplicationContext context, IWebHostEnvironment appEnvironment, UserManager<User> userManager, SignInManager<User> signInManager)
         {
             db = context;
             _appEnvironment = appEnvironment;
@@ -27,12 +27,12 @@ namespace WebApplication1.Controllers
 
         public ActionResult RegistrateSchool()
         {
-            List<School> schoolList =db.Schools.ToList();
+            List<School> schoolList = db.Schools.ToList();
             ViewBag.schools = schoolList;
             return View();
         }
 
-        public async Task <IActionResult> Register(RegistrateSchoolViewModel model)
+        public async Task<IActionResult> Register(RegistrateSchoolViewModel model)
         {
             int count = db.RegistratedSchools.Where(a => a.Name == model.Name).Count();
             if (count == 0)
@@ -59,6 +59,28 @@ namespace WebApplication1.Controllers
                 }
             }
             return RedirectToAction("RegistrateSchool");
+        }
+        public async Task<IActionResult> DeleteSchool(string SchoolName)
+        {
+            RegisteredSchool school = db.RegistratedSchools.Where(s => s.Name == SchoolName).First();
+            IQueryable<Employee> employees = db.Employee.Where(e => e.RegistrateSchoolId == school.Id);
+            IQueryable<User> users = db.Users;
+            foreach (var emp in employees)
+            {
+               //users.P
+                User user = await _userManager.FindByIdAsync(emp.UserId);
+                 db.Employee.Remove(emp);
+                if (user != null)
+                {
+                    IEnumerable<string> userRoles = await _userManager.GetRolesAsync(user);
+                    await _userManager.RemoveFromRolesAsync(user, userRoles);
+                    await _userManager.DeleteAsync(user);
+                }
+                
+            }
+            db.RegistratedSchools.Remove(school);
+            db.SaveChanges();            
+            return RedirectToAction("Index", "Home");
         }
     }
 }

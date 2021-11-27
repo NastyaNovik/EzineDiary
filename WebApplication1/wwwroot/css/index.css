@@ -2,7 +2,16 @@
     background-image: url("https://res.cloudinary.com/dwigle/image/upload/v1637874830/images/background62_idvqrs.jpg");
     background-size: cover;
 }
-
+.laye {
+    padding: 10px 29px;
+    overflow: hidden;
+    color: white;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    border-width: 0;
+    outline: none;
+    cursor: pointer;
+}
 .btn {
     padding: 10px 29px;
     overflow: hidden;

@@ -11,33 +11,41 @@
         </h1>
     </div>
 }
-@if (User.Identity.IsAuthenticated)
-{
-   
-    @if (User.IsInRole("admin"))
+<form method="post">
+
+    @if (User.Identity.IsAuthenticated)
     {
-        <a class="btn btn1 btn-rounded" href="/RegistrateSchool/RegistrateSchool">Зарегистрировать новую школу</a>
-        <div class="contain">
-            <table class="table">
-                <tr><td><b style="font-size:24px; text-transform:uppercase; color:white;margin:0 15px">Школа</b></td><td><b style="font-size:24px; text-transform:uppercase; color:white;margin:0 15px">Директор</b></td></tr>
-                @foreach (var item in ViewBag.schoolDirectors)
-                {
-                    <tr>
-                        <td style="vertical-align: top; font-size: 20px; text-transform: uppercase; color: white; margin: 0 15px">
-                            @item.SchoolName
-                        </td>
-                        <td style="vertical-align: top; font-size: 20px; text-transform: uppercase; color: white; margin: 0 15px">
-                            @item.LastName @item.Name @item.SecondName
-                        </td>
-                        <td>
-                        <td width="300"><img src="@item.ImageUrl" class="img-fluid" width="300" /></td>
-                    </tr>
-                }
-            </table>
-        </div>
+
+        @if (User.IsInRole("admin"))
+        {
+            <a class="btn btn1 btn-rounded" href="/RegistrateSchool/RegistrateSchool">Зарегистрировать новую школу</a>
+            <div class="contain">
+                <table class="table" style="width:max-content">
+                    <tr><td><b style="font-size:24px; text-transform:uppercase; color:white;margin:0 15px">Школа</b></td><td><b style="font-size:24px; text-transform:uppercase; color:white;margin:0 15px">Директор</b></td></tr>
+                    @foreach (var item in ViewBag.schoolDirectors)
+                    {
+                        <tr>
+                            <td width="300" style="vertical-align: top; font-size: 20px; text-transform: uppercase; color: white; margin: 0 15px">
+                                @item.SchoolName
+                            </td>
+                            <td width="280" style="vertical-align: top; font-size: 20px; text-transform: uppercase; color: white; margin: 0 15px">
+                                @item.LastName @item.Name @item.SecondName
+                            </td>
+                            <td width="300"><img src="@item.ImageUrl" class="img-fluid" width="300" /></td>
+                            <td>
+                                <button type="submit" class="btn btn-danger btn-rounded" style="font-size:12px;" asp-controller="RegistrateSchool" asp-action="Deleteschool"asp-route-SchoolName="@item.SchoolName" name="button">
+                                    <i class="fa fa-trash text-danger rounded-circle bg-white mr-1" style="padding: 5px 7px;"></i>Удалить школу
+                                </button>
+                            </td>
+                        </tr>
+                    }
+                    </table>
+                </div>
+
+        }
     }
-    @if (User.IsInRole("administration"))
-    {
-        <a class="btn btn1 btn-rounded" href="/Employee/RegisterTeachersAdministration">Registr</a>
-    }
-}
+</form>
+ @if (User.IsInRole("administration"))
+ {
+  <a class="btn btn1 btn-rounded" href="/Employee/RegisterTeachersAdministration">Registr</a>
+ }

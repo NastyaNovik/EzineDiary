@@ -1,73 +1,55 @@
 ﻿@model WebApplication1.ViewModels.RegistrateTeacherAdministration
 <html>
 <head>
-    <link src="~/lib/dist/jquery-ui/themes/base/all.css" rel="stylesheet" type="text/css" />
-    <link rel="stylesheet" href="//code.jquery.com/ui/1.13.0/themes/base/jquery-ui.css">
-    <style>
-        .ui-autocomplete {
-            position: absolute;
-            z-index: 1000;
-            cursor: default;
-            padding: 0;
-            margin-top: 2px;
-            list-style: none;
-            background-color: #ffffff;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            -webkit-box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
-            -moz-box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
-            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
-        }
-
-            .ui-autocomplete > li {
-                padding: 3px 20px;
-            }
-
-                .ui-autocomplete > li.ui-state-focus {
-                    background-color: #DDD;
-                }
-
-        .ui-helper-hidden-accessible {
-            display: none;
-        }
-    </style>
+    <link rel="stylesheet" type="text/css" href="~/css/RegistrTeachAdmin.css" />
+    <link rel="stylesheet" type="text/css" href="~/css/font-awesome/css/font-awesome.css" />
 </head>
 <body>
-    <form method="post" asp-controller="Employee" asp-action="RegisterTeachersAdministration">
-        <div asp-validation-summary="ModelOnly"></div>
-        <div class="row" style="position: relative;">
-            <div class="form-group">
-                <label>Должность</label><br />
-                <select class="form-control" asp-for="Position">
-                    @foreach (var position in ViewBag.Positions)
-                    {
-                        <option>@position.Name</option>
-                    }
-                </select>
-            </div>
-            <div class="form-group ui-widget col-xl-11">
-                <label asp-for="UserName"></label><br />
-                <input class="form-control" asp-for="UserName" />
-                <span asp-validation-for="UserName"></span>
-            </div>
-            <div class="form-group ui-widget col-xl-11">
-                <label asp-for="Email"></label><br />
-                <input class="form-control" asp-for="Email" />
-                <span asp-validation-for="Email"></span>
-            </div>
-            <div class="form-group ui-widget col-xl-11">
-                <label asp-for="Password"></label><br />
-                <input class="form-control" asp-for="Password" />
-                <span asp-validation-for="Password"></span>
-            </div>
+    <h2>Регистрация нового сотрудника</h2>
+    <center>
+        <div class="bo">
+            <div class="container">
 
+                <div class="col-md-offset-3 col-md-6">
+                    <div class="form-group">
+                        <form method="post" asp-controller="Employee" asp-action="RegisterTeachersAdministration" asp-route-SchoolId="@ViewBag.SchoolId">
+                            <div>
+                                <div class="form-group">
+                                    <label>Должность</label><br />
+                                    <select class="form-control" asp-for="Position">
+                                        @foreach (var position in ViewBag.Positions)
+                                        {
+                                            <option>@position.Name</option>
+                                        }
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label asp-for="UserName"></label><br />
+                                    <input class="form-control" asp-for="UserName" />
+                                    <span asp-validation-for="UserName"></span>
+                                </div>
+                                <div class="form-group">
+                                    <label asp-for="Email"></label><br />
+                                    <input class="form-control" asp-for="Email" type="email" />
+                                    <span asp-validation-for="Email"></span>
+                                </div>
+                                <div class="form-group">
+                                    <label asp-for="Password"></label><br />
+                                    <input class="form-control" asp-for="Password" />
+                                    <span asp-validation-for="Password"></span>
+                                </div>
+
+                            </div>
+                            <center>
+                                <div class="form-group">
+                                    <input type="submit" class="registrB" value="Зарегистрировать" />
+                                </div>
+                            </center>
+                        </form>
+                    </div>
+                </div>
+            </div>
         </div>
-        <div>
-            <input type="submit" value="Регистрация" />
-        </div>
-    </form>
-    <script src="~/lib/bootstrap/dist/js/jquery-ui/external/jquery-1.10.2/jquery.min.js" type="text/javascript"></script>
-    <script src="~/lib/bootstrap/dist/js/jquery-ui/external/jquery-1.11.3/jquery.min.js" type="text/javascript"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></script>
+    </center>
 </body>
 </html>

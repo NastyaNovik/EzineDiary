@@ -36,6 +36,7 @@ namespace WebApplication1.Controllers
             var schDir = from r in db.RegistratedSchools
                          join u in db.Users on r.Id equals u.SchoolId
                          join e in db.Employee on u.Id equals e.UserId
+                         where e.PositionId==1
                          select new SchoolDirector
                          {
                              SchoolName = r.Name,

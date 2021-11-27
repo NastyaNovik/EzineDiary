@@ -68,22 +68,44 @@ namespace WebApplication1.Controllers
                     result += p;
                     result += ",";
                 }
-                User user = await db.Users.OrderByDescending(u => u.Id).FirstAsync();
+                User user = await db.Users.OrderByDescending(u => u.SchoolId).FirstAsync();
+                User user2 = await db.Users.FindAsync(getCurrentUserId());
                 Position ChPosition = db.Position.Where(p => p.Name == position).First();
-                Employee employee = new Employee
+                if (User.IsInRole("admin"))
                 {
-                    LastName = model.LastName,
-                    Name = model.Name,
-                    SecondName = model.SecondName,
-                    PhoneNumber = model.PhoneNumber,
-                    AdditionalInformation = model.AdditionalInformation,
-                    PositionId = ChPosition.Id,
-                    RegistrateSchoolId = user.SchoolId,
-                    UserId = user.Id,
-                    Subject = result,
-                    ImageUrl = LoadImage(uploadedFile)
-                };
-                db.Employee.Add(employee);
+                    Employee employee = new Employee
+                    {
+                        LastName = model.LastName,
+                        Name = model.Name,
+                        SecondName = model.SecondName,
+                        PhoneNumber = model.PhoneNumber,
+                        AdditionalInformation = model.AdditionalInformation,
+                        PositionId = ChPosition.Id,
+                        RegistrateSchoolId = user.SchoolId,
+                        UserId = user.Id,
+                        Subject = result,
+                        ImageUrl = LoadImage(uploadedFile)
+                    };
+                    db.Employee.Add(employee);
+                }
+                else
+                {
+                    Employee employee = new Employee
+                    {
+                        LastName = model.LastName,
+                        Name = model.Name,
+                        SecondName = model.SecondName,
+                        PhoneNumber = model.PhoneNumber,
+                        AdditionalInformation = model.AdditionalInformation,
+                        PositionId = ChPosition.Id,
+                        RegistrateSchoolId = user2.SchoolId,
+                        UserId = user.Id,
+                        Subject = result,
+                        ImageUrl = LoadImage(uploadedFile)
+                    };
+                    db.Employee.Add(employee);
+                }
+                
                 await db.SaveChangesAsync();
                 return RedirectToAction("Index", "Home");
             }
@@ -105,7 +127,7 @@ namespace WebApplication1.Controllers
             return View();
         }
         [HttpPost]
-        public async Task<IActionResult> RegisterTeachersAdministration(RegistrateTeacherAdministration model, int SchoolId, string[] subjects, IFormFile uploadedFile)
+        public async Task<IActionResult> RegisterTeachersAdministration(RegistrateTeacherAdministration model, int SchoolId)
         {
             User user = new User { Email = model.Email, UserName = model.UserName, SchoolId = SchoolId };
             var result = await _userManager.CreateAsync(user, model.Password);
