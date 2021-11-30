@@ -67,7 +67,7 @@ namespace WebApplication1.Controllers
             var optionsBuilder = new DbContextOptionsBuilder<ApplicationContext>();
 
             var options = optionsBuilder
-                    .UseSqlServer(@"Server=CMDB-80289;Database=EzineDiary;Trusted_Connection=True;")
+                    .UseSqlServer(@"Server=DESKTOP-7SLNJQV;Database=EzineDiary;Trusted_Connection=True;")
                     .Options;
             RegisteredSchool school = db.RegistratedSchools.Where(s => s.Name == SchoolName).First();
             using (var context = new ApplicationContext(options))

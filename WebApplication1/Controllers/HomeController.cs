@@ -28,50 +28,52 @@ namespace WebApplication1.Controllers
         }
         public IActionResult Index()
         {
-            if(User.Identity.IsAuthenticated)
+            if (User.Identity.IsAuthenticated)
             {
                 User user = db.Users.Find(getCurrentUserId());
-                ViewBag.SchoolId=user.SchoolId;
-            }
-            var schDir = from r in db.RegistratedSchools
-                         join u in db.Users on r.Id equals u.SchoolId
-                         join e in db.Employee on u.Id equals e.UserId
-                         where e.PositionId==1
-                         select new SchoolDirector
-                         {
-                             SchoolName = r.Name,
-                             LastName = e.LastName,
-                             Name = e.Name,
-                             SecondName = e.SecondName,
-                             ImageUrl = e.ImageUrl,
-                         };
-            List<SchoolDirector> schoolDirectors = new List<SchoolDirector>();
-            foreach(var s in schDir)
-            {
-                schoolDirectors.Add(s);
-            }
-            ViewBag.schoolDirectors = schoolDirectors;
+                ViewBag.SchoolId = user.SchoolId;
 
-            var employeees = from r in db.RegistratedSchools
+                var schDir = from r in db.RegistratedSchools
                              join u in db.Users on r.Id equals u.SchoolId
                              join e in db.Employee on u.Id equals e.UserId
-                             join p in db.Position on e.PositionId equals p.Id
-                             select new EmployeesOfSchool
+                             where e.PositionId == 1
+                             select new SchoolDirector
                              {
                                  SchoolName = r.Name,
                                  LastName = e.LastName,
                                  Name = e.Name,
                                  SecondName = e.SecondName,
                                  ImageUrl = e.ImageUrl,
-                                 UserId = e.UserId,
-                                 Position = p.Name
                              };
-            List<EmployeesOfSchool> employeesOfSchool = new List<EmployeesOfSchool>();
-            foreach (var s in employeees)
-            {
-                employeesOfSchool.Add(s);
+                List<SchoolDirector> schoolDirectors = new List<SchoolDirector>();
+                foreach (var s in schDir)
+                {
+                    schoolDirectors.Add(s);
+                }
+                ViewBag.schoolDirectors = schoolDirectors;
+
+                var employeees = from r in db.RegistratedSchools
+                                 join u in db.Users on r.Id equals u.SchoolId
+                                 join e in db.Employee on u.Id equals e.UserId
+                                 join p in db.Position on e.PositionId equals p.Id
+                                 where e.RegistrateSchoolId == user.SchoolId
+                                 select new EmployeesOfSchool
+                                 {
+                                     SchoolName = r.Name,
+                                     LastName = e.LastName,
+                                     Name = e.Name,
+                                     SecondName = e.SecondName,
+                                     ImageUrl = e.ImageUrl,
+                                     UserId = e.UserId,
+                                     Position = p.Name
+                                 };
+                List<EmployeesOfSchool> employeesOfSchool = new List<EmployeesOfSchool>();
+                foreach (var s in employeees)
+                {
+                    employeesOfSchool.Add(s);
+                }
+                ViewBag.emplyeesOfSchool = employeesOfSchool;
             }
-            ViewBag.emplyeesOfSchool = employeesOfSchool;
             return View();
         }
 

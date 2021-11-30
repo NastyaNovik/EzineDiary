@@ -212,7 +212,7 @@ namespace WebApplication1.Controllers
                     await _userManager.AddToRolesAsync(user, addedRoles);
                     await _userManager.RemoveFromRolesAsync(user, removedRoles);
                     Employee employee = db.Employee.Where(e => e.UserId == UserId).First();
-                    Position position = db.Position.Where(p => p.Name == "Заместитель").First();
+                    Position position = db.Position.Where(p => p.Name == "Заместитель директора по учебной части").First();
                     employee.PositionId = position.Id;
                     db.SaveChanges();
                     return RedirectToAction("Index", "Home");
