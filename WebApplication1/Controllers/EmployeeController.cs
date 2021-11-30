@@ -22,12 +22,14 @@ namespace WebApplication1.Controllers
         private ApplicationContext db;
         private readonly UserManager<User> _userManager;
         private readonly SignInManager<User> _signInManager;
+        RoleManager<IdentityRole> _roleManager;
         private static string DefaultImageUrl= "https://res.cloudinary.com/dwigle/image/upload/v1629306209/images/uyut_bishkek_a4qq8l.png";
-        public EmployeeController(ApplicationContext context, UserManager<User> userManager, SignInManager<User> signInManager)
+        public EmployeeController(ApplicationContext context, RoleManager<IdentityRole> roleManager, UserManager<User> userManager, SignInManager<User> signInManager)
         {
             db = context;
             _userManager = userManager;
             _signInManager = signInManager;
+            _roleManager = roleManager;
         }
 
         public string getCurrentUserId()
@@ -145,6 +147,122 @@ namespace WebApplication1.Controllers
                 }
             }
             return View();
+        }
+        public async Task<IActionResult> DeleteEmployee(string UserId)
+        {
+            Employee employee = db.Employee.Where(e => e.UserId == UserId).First();
+            User user = await _userManager.FindByIdAsync(UserId);
+            if (user != null)
+            {
+                IEnumerable<string> userRoles = await _userManager.GetRolesAsync(user);
+                await _userManager.RemoveFromRolesAsync(user, userRoles);
+                await _userManager.DeleteAsync(user);
+                db.Employee.Remove(employee);
+            }
+            await db.SaveChangesAsync();
+            return RedirectToAction("Index", "Home");
+        }
+        public async Task<IActionResult> EditEmployee(string UserId, int SchoolId, string Error)
+        {
+            ViewBag.Error = Error;
+            ViewBag.SchoolId = SchoolId;
+            User user = await _userManager.FindByIdAsync(UserId);
+            if (user != null)
+            {
+                var userRoles = await _userManager.GetRolesAsync(user);
+                var allRoles = _roleManager.Roles.ToList();
+                allRoles.Remove(db.Roles.Where(u => u.Name == "Child").First());
+                allRoles.Remove(db.Roles.Where(u => u.Name == "admin").First());
+                ChangeRoleViewModel model = new ChangeRoleViewModel()
+                {
+                    UserId = user.Id,
+                    UserEmail = user.Email,
+                    UserRoles = userRoles,
+                    AllRoles = allRoles
+                };
+                return View("EditEmployee", model);
+            }
+            return NotFound();
+        }
+        [HttpPost]
+        public async Task<IActionResult> EditEmployee(string UserId, List<string> roles, int SchoolId)
+        {
+           
+            User user = await _userManager.FindByIdAsync(UserId);
+            if (user != null)
+            {
+                if (roles.Contains("teacher"))
+                {
+                    var userRoles = await _userManager.GetRolesAsync(user);
+                    var addedRoles = roles.Except(userRoles);
+                    var removedRoles = userRoles.Except(roles);
+                    await _userManager.AddToRolesAsync(user, addedRoles);
+                    await _userManager.RemoveFromRolesAsync(user, removedRoles);
+                    Employee employee = db.Employee.Where(e => e.UserId == UserId).First();
+                    Position position = db.Position.Where(p => p.Name == "Учитель").First();
+                    employee.PositionId = position.Id;
+                    db.SaveChanges();
+                    return RedirectToAction("Index", "Home");
+                }
+                else if (roles.Contains("administration"))
+                {
+                    var userRoles = await _userManager.GetRolesAsync(user);
+                    var addedRoles = roles.Except(userRoles);
+                    var removedRoles = userRoles.Except(roles);
+                    await _userManager.AddToRolesAsync(user, addedRoles);
+                    await _userManager.RemoveFromRolesAsync(user, removedRoles);
+                    Employee employee = db.Employee.Where(e => e.UserId == UserId).First();
+                    Position position = db.Position.Where(p => p.Name == "Заместитель").First();
+                    employee.PositionId = position.Id;
+                    db.SaveChanges();
+                    return RedirectToAction("Index", "Home");
+                }
+                else if(roles.Contains("Директор"))
+                {
+                    int countDir = db.Employee.Where(e => e.PositionId==1&&e.RegistrateSchoolId==SchoolId).Count();
+                    if (countDir == 0)
+                    {
+                        var userRoles = await _userManager.GetRolesAsync(user);
+                        var removedRoles = userRoles.Except(roles);
+                        await _userManager.RemoveFromRolesAsync(user, removedRoles);
+                        await _userManager.AddToRoleAsync(user, "administration");
+                        Employee employee = db.Employee.Where(e => e.UserId == UserId).First();
+                        Position position = db.Position.Where(p => p.Name == "Директор").First();
+                        employee.PositionId = position.Id;
+                        db.SaveChanges();
+                        return RedirectToAction("Index", "Home");
+                    }
+                    else
+                    {
+                        return RedirectToAction("EditEmployee","Employee",new { UserId = user.Id, SchoolId = SchoolId, Error="В этой школе уже есть директор!" });
+                    }
+                }
+                else if (roles.Contains("Заместитель директора по учебной части"))
+                {
+                    var userRoles = await _userManager.GetRolesAsync(user);
+                    var removedRoles = userRoles.Except(roles);
+                    await _userManager.RemoveFromRolesAsync(user, removedRoles);
+                    await _userManager.AddToRoleAsync(user, "administration");
+                    Employee employee = db.Employee.Where(e => e.UserId == UserId).First();
+                    Position position = db.Position.Where(p => p.Name == "Заместитель директора по учебной части").First();
+                    employee.PositionId = position.Id;
+                    db.SaveChanges();
+                    return RedirectToAction("Index", "Home");
+                }
+                else if (roles.Contains("Заместитель директора по воспитательной работе"))
+                {
+                    var userRoles = await _userManager.GetRolesAsync(user);
+                    var removedRoles = userRoles.Except(roles);
+                    await _userManager.RemoveFromRolesAsync(user, removedRoles);
+                    await _userManager.AddToRoleAsync(user, "administration");
+                    Employee employee = db.Employee.Where(e => e.UserId == UserId).First();
+                    Position position = db.Position.Where(p => p.Name == "Заместитель директора по воспитательной работе").First();
+                    employee.PositionId = position.Id;
+                    db.SaveChanges();
+                    return RedirectToAction("Index", "Home");
+                }
+            }
+            return NotFound();
         }
     }
 }

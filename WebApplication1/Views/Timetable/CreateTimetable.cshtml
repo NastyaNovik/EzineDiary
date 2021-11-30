@@ -1,0 +1,78 @@
+﻿<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+<select hidden>
+    @foreach (var cl in ViewBag.SchoolClasses)
+    {
+        <option>@cl</option>
+    }
+</select>
+<ul class="nav nav-tabs">
+
+    <li class="nav-item">
+        <a class="nav-link show active" data-toggle="tab" href="#a" id="A">А</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" data-toggle="tab" href="#b" id="B">Б</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" data-toggle="tab" href="#v" id="V">В</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" data-toggle="tab" href="#g" id="G">Г</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" data-toggle="tab" href="#d" id="D">Д</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" data-toggle="tab" href="#e" id="E">Е</a>
+    </li>
+</ul>
+
+<div class="tab-content">
+
+    <div class="tab-pane fade show active" id="a">
+        класс а
+    </div>
+    <div class="tab-pane fade" id="b">
+        класс б
+    </div>
+    <div class="tab-pane fade" id="v">
+        в
+    </div>
+    <div class="tab-pane fade" id="g">
+        г
+    </div>
+    <div class="tab-pane fade" id="d">
+        д
+    </div>
+    <div class="tab-pane fade" id="e">
+        е
+    </div>
+
+</div>
+<script>
+    var arr = new Array();
+    let elements = document.querySelectorAll('select > option');
+    for (let elem of elements) {
+        arr.push(elem.innerHTML);
+    }
+    if (!arr.includes("А")) {
+        document.getElementById("A").hidden = true;
+    }
+    if (!arr.includes("Б")) {
+        document.getElementById("B").hidden = true;
+    }
+    if (!arr.includes("В")) {
+        document.getElementById("V").hidden = true;
+    }
+    if (!arr.includes("Г")) {
+        document.getElementById("G").hidden = true;
+    }
+    if (!arr.includes("Д")) {
+        document.getElementById("D").hidden = true;
+    }
+    if (!arr.includes("Е")) {
+        document.getElementById("E").hidden = true;
+    }
+</script>

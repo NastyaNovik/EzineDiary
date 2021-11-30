@@ -8,6 +8,7 @@ using WebApplication1.Models;
 using WebApplication1.ViewModels;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 
 namespace WebApplication1.Controllers
 {
@@ -17,6 +18,7 @@ namespace WebApplication1.Controllers
         private readonly SignInManager<User> _signInManager;
         private ApplicationContext db;
         IWebHostEnvironment _appEnvironment;
+
         public RegistrateSchoolController(ApplicationContext context, IWebHostEnvironment appEnvironment, UserManager<User> userManager, SignInManager<User> signInManager)
         {
             db = context;
@@ -62,24 +64,28 @@ namespace WebApplication1.Controllers
         }
         public async Task<IActionResult> DeleteSchool(string SchoolName)
         {
+            var optionsBuilder = new DbContextOptionsBuilder<ApplicationContext>();
+
+            var options = optionsBuilder
+                    .UseSqlServer(@"Server=CMDB-80289;Database=EzineDiary;Trusted_Connection=True;")
+                    .Options;
             RegisteredSchool school = db.RegistratedSchools.Where(s => s.Name == SchoolName).First();
-            IQueryable<Employee> employees = db.Employee.Where(e => e.RegistrateSchoolId == school.Id);
-            IQueryable<User> users = db.Users;
-            foreach (var emp in employees)
+            using (var context = new ApplicationContext(options))
             {
-               //users.P
-                User user = await _userManager.FindByIdAsync(emp.UserId);
-                 db.Employee.Remove(emp);
-                if (user != null)
+                foreach (var emp in context.Employee.Where(e => e.RegistrateSchoolId == school.Id))
                 {
-                    IEnumerable<string> userRoles = await _userManager.GetRolesAsync(user);
-                    await _userManager.RemoveFromRolesAsync(user, userRoles);
-                    await _userManager.DeleteAsync(user);
+                    User user = await _userManager.FindByIdAsync(emp.UserId);
+                    if (user != null)
+                    {
+                        IEnumerable<string> userRoles = await _userManager.GetRolesAsync(user);
+                        await _userManager.RemoveFromRolesAsync(user, userRoles);
+                        await _userManager.DeleteAsync(user);
+                    }
+                    context.Employee.Remove(emp);
                 }
-                
+                context.RegistratedSchools.Remove(school);
+                context.SaveChanges();
             }
-            db.RegistratedSchools.Remove(school);
-            db.SaveChanges();            
             return RedirectToAction("Index", "Home");
         }
     }

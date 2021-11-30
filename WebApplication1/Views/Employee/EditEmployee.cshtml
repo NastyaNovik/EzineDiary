@@ -1,0 +1,66 @@
+﻿@using Microsoft.AspNetCore.Identity
+@model WebApplication1.ViewModels.ChangeRoleViewModel
+@{
+    ViewBag.Title = "Edit user roles";
+}
+<link rel="stylesheet" type="text/css" href="~/css/font-awesome.min.css" />
+<style>
+    .registrB {
+        width: 40%;
+        background: linear-gradient(45deg, rgb(4, 3, 6) 3%, rgb(102, 66, 111));
+        padding: 10px 20px;
+        border: none;
+        font-size: 14px;
+        font-weight: bold;
+        color: #fff;
+        border-radius: 20px;
+        text-transform: uppercase;
+        margin: 20px 0 30px 0;
+        text-align: center;
+    }
+
+        .registrB:hover {
+            background: linear-gradient(45deg, rgb(4, 3, 6) 3%, rgb(77, 74, 78));
+            color: #fff;
+            outline: none;
+            box-shadow: none;
+        }
+</style>
+
+<center>
+    <h2>Изменить роль для пользователя @Model.UserEmail</h2>
+
+    <form asp-action="EditEmployee" asp-controller="Employee" asp-route-SchoolId="@ViewBag.SchoolId" method="post">
+        <input type="hidden" name="UserId" value="@Model.UserId" />
+        <div class="form-group" style="font-size:26px;">
+            @foreach (IdentityRole role in Model.AllRoles)
+            {
+                <input type="radio" id="roles" name="roles" value="@role.Name" style="display:inline-block" onclick="handleClick(this);"
+                       @(Model.UserRoles.Contains(role.Name) ? "checked=\"checked\"" : "") />@role.Name <br />
+                }
+            <p id="role" hidden>
+                <input type="radio" id="roles" name="roles" value="Директор" style="display:inline-block" />Директор
+                <input type="radio" id="roles" name="roles" value="Заместитель" style="display:inline-block" />Заместитель
+            </p>
+        </div>
+        <button type="submit" class="registrB">Сохранить</button>
+    </form>
+</center>
+<center>
+    <p style="font-size:26px">
+        @ViewBag.Error
+    </p>
+</center>
+<script>
+    function handleClick(myRadio) {
+        var inp = document.getElementsByName("roles");
+        if (inp[0].checked) {
+            document.getElementById("role").hidden = true;
+        }
+        else {
+            document.getElementById("role").hidden = false;
+        }
+    }
+</script>
+
+   

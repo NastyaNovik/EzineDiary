@@ -51,6 +51,27 @@ namespace WebApplication1.Controllers
                 schoolDirectors.Add(s);
             }
             ViewBag.schoolDirectors = schoolDirectors;
+
+            var employeees = from r in db.RegistratedSchools
+                             join u in db.Users on r.Id equals u.SchoolId
+                             join e in db.Employee on u.Id equals e.UserId
+                             join p in db.Position on e.PositionId equals p.Id
+                             select new EmployeesOfSchool
+                             {
+                                 SchoolName = r.Name,
+                                 LastName = e.LastName,
+                                 Name = e.Name,
+                                 SecondName = e.SecondName,
+                                 ImageUrl = e.ImageUrl,
+                                 UserId = e.UserId,
+                                 Position = p.Name
+                             };
+            List<EmployeesOfSchool> employeesOfSchool = new List<EmployeesOfSchool>();
+            foreach (var s in employeees)
+            {
+                employeesOfSchool.Add(s);
+            }
+            ViewBag.emplyeesOfSchool = employeesOfSchool;
             return View();
         }
 
