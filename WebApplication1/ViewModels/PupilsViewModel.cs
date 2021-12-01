@@ -3,10 +3,12 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
+using WebApplication1.Migrations;
+using WebApplication1.Models;
 
 namespace WebApplication1.ViewModels
 {
-    public class RegistrateTeacherAdministration
+    public class PupilsViewModel
     {
         [Required]
         [Display(Name = "Имя пользователя")]
@@ -36,19 +38,17 @@ namespace WebApplication1.ViewModels
         [Display(Name = "Номер телефона")]
         public string PhoneNumber { get; set; }
 
-        [Display(Name = "Дополнительная информация")]
-        public string AdditionalInformation { get; set; }
-
         [Required]
         public int SchoolId { get; set; }
 
         [Required]
-        public string Position { get; set; }
+        public int ClassNumber { get; set; }
+        [Required]
+        public string ClassLetter { get; set; }
 
         [Required]
         public string UserId { get; set; }
 
-        public string Subject { get; set; }
 
         public string ImageUrl { get; set; }
     }

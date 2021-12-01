@@ -1,0 +1,114 @@
+﻿@model WebApplication1.ViewModels.PupilsViewModel
+
+
+<style>
+    body {
+        background-image: url("https://res.cloudinary.com/dwigle/image/upload/v1638188109/images/1613791385_11-p-svetlo-serii-fon-dlya-saita-12_plrefm.jpg");
+        background-size: cover;
+    }
+    .bo {
+        background-color: rgba(61, 61, 61, 0.7);
+        color: white;
+        font-size: 19px;
+    }
+    .right-col {
+        display: flex;
+    }
+
+    h2 {
+        color: rgb(77, 74, 78);
+        text-transform: uppercase;
+        text-align: center;
+    }
+
+    h4 {
+        text-transform: uppercase;
+    }
+
+    .registrB {
+        width: 20%;
+        background: linear-gradient(45deg, rgb(4, 3, 6) 3%, rgb(102, 66, 111));
+        padding: 10px 20px;
+        border: none;
+        font-size: 14px;
+        font-weight: bold;
+        color: #fff;
+        border-radius: 20px;
+        text-transform: uppercase;
+        margin: 20px 0 30px 0;
+        text-align: center;
+    }
+
+        .registrB:hover {
+            background: linear-gradient(45deg, rgb(4, 3, 6) 3%, rgb(77, 74, 78));
+            color: #fff;
+            outline: none;
+            box-shadow: none;
+        }
+</style>
+<h2>Добавление и регистрация учеников</h2>
+<br />
+<br />
+<div class="bo">
+    <div class="container">
+        <h4>Выберите файл со списком учеников</h4>
+        <br />
+        <br />
+        @using (Html.BeginForm("AddPupils", "Pupil", FormMethod.Post, new { enctype = "multipart/form-data", SchoolId = @ViewBag.SchoolId }))
+        {
+            @Html.Raw(ViewBag.Error)
+            <span>Excel File </span>
+            <input type="file" name="fileExcel" />
+            <br />
+            <br />
+            <br />
+            <h4>Выберите класс</h4>
+            <br />
+            <br />
+            <div class="row">
+                <div class="col-md-1">
+                    <div class="form-group">
+                        <select class="form-control" asp-for="ClassNumber" name="Classes" id="select">
+                            @foreach (var cl in ViewBag.SchoolClasses)
+                            {
+                                <option>@cl</option>
+                            }
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-8 right-col">
+                    <div class="form-group">
+                        <select class="form-control" asp-for="ClassLetter" name="Letters" id="select">
+                            @foreach (var cl in ViewBag.SchoolLetters)
+                            {
+                                <option>@cl</option>
+                            }
+                        </select>
+                    </div>
+                </div>
+            </div>
+            @foreach (var cl in ViewBag.Teachers)
+            {
+                <input type="text" value="@cl.Id" name="TeacherId" hidden />
+            }
+            <br />
+            <br />
+            <h4>Выберите классного руководителя</h4>
+            <br />
+            <br />
+            <div class="form-group">
+                <select class="form-control" name="Teachers" id="select">
+                    @foreach (var cl in ViewBag.Teachers)
+                    {
+                        <option>@cl.LastName&nbsp;@cl.Name&nbsp;@cl.SecondName</option>
+                    }
+                </select>
+            </div>
+            <br />
+            <br />
+            <center>
+                <input type="submit" class="registrB" value="Добавить" />
+            </center>
+        }
+        </div>
+    </div>
