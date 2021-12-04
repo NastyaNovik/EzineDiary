@@ -85,6 +85,24 @@ namespace WebApplication1.Controllers
                 }
                 context.RegistratedSchools.Remove(school);
                 context.SaveChanges();
+                IQueryable<SchoolClasses> sch = db.SchoolClasses.Where(s => s.SchoolId == school.Id);
+                context.SchoolClasses.RemoveRange(sch);
+                context.SaveChanges();
+            }
+            using (var context = new ApplicationContext(options))
+            {
+                foreach (var child in context.Pupils.Where(e => e.RegistrateSchoolId == school.Id))
+                {
+                    User user = await _userManager.FindByIdAsync(child.UserId);
+                    if (user != null)
+                    {
+                        IEnumerable<string> userRoles = await _userManager.GetRolesAsync(user);
+                        await _userManager.RemoveFromRolesAsync(user, userRoles);
+                        await _userManager.DeleteAsync(user);
+                    }
+                    context.Pupils.Remove(child);
+                }
+                context.SaveChanges();
             }
             return RedirectToAction("Index", "Home");
         }

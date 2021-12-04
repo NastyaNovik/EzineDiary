@@ -17,6 +17,7 @@ namespace WebApplication1.Models
         public DbSet<Class> Class { get; set; }
         public DbSet<SchoolClasses> SchoolClasses{ get; set; }
         public DbSet<Pupil> Pupils { get; set; }
+        public DbSet<Timetable> Timetable { get; set; }
         public ApplicationContext(DbContextOptions<ApplicationContext> options)
             : base(options)
         {

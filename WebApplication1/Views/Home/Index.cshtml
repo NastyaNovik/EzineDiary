@@ -55,11 +55,11 @@
                                         <br /> <span style="color: #87CEFA">@item.LastName @item.Name @item.SecondName</span>
                                         <br /><u>@item.Position</u>
                                     </td>
-                                    <td>
+                                    <td width="300">
                                         @if (item.Position != "Директор")
                                         {
                                 <form asp-action="DeleteEmployee" asp-controller="Employee" asp-route-UserId="@item.UserId" method="post">
-                                    <button type="submit" class="btn btn-danger btn-rounded" style="font-size:12px;" name="button">
+                                    <button type="submit" class="btn btn-danger btn-rounded" style="float: right; font-size: 12px;" name="button">
                                         <i class="fa fa-trash text-danger rounded-circle bg-white mr-1" style="padding: 5px 7px;"></i>Удалить
                                     </button> <br />
                                 </form>}
