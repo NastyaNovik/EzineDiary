@@ -77,7 +77,8 @@
  {
      @foreach(var cl in ViewBag.classeshref)
                 {
-         <a href="">@cl.ClassNumber "@cl.ClassLetter"</a>
+         <a style="color:black" asp-controller="SchoolMagazine" asp-action="SchoolMagazine" asp-route-Class="@cl.ClassNumber" asp-route-ClassLetter="@cl.ClassLetter">@cl.ClassNumber "@cl.ClassLetter"</a>
+         
                 }
  }
   

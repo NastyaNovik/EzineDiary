@@ -70,7 +70,7 @@ namespace WebApplication1.Controllers
                     result += p;
                     result += ",";
                 }
-                User user = await db.Users.OrderByDescending(u => u.SchoolId).FirstAsync();
+                User user = await db.Users.LastAsync();
                 User user2 = await db.Users.FindAsync(getCurrentUserId());
                 Position ChPosition = db.Position.Where(p => p.Name == position).First();
                 if (User.IsInRole("admin"))

@@ -78,8 +78,8 @@ namespace WebApplication1.Controllers
                                   join s in db.SchoolClasses on t.SchoolClassesId equals s.Id
                                   join c in db.Class on s.ClassId equals c.Id
                                   join e in db.Employee on t.TeacherId equals e.Id
-                                  where e.UserId == user.Id
-                                  select c).ToList();
+                                  where e.UserId == getCurrentUserId()
+                                  select c).Distinct().ToList();
                 ViewBag.classeshref = classeshref;
             }
             return View();
