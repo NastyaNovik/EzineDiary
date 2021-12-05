@@ -1,0 +1,11 @@
+﻿@{ ViewData["Title"] = "Просмотр расписания"; }
+<link rel="stylesheet" type="text/css" href="~/css/font-awesome/css/font-awesome.css" />
+<link rel="stylesheet" type="text/css" href="~/css/index.css" />
+
+<h2>Расписание для 1-11 классов</h2>
+@foreach (var f in ViewBag.filesToLoad)
+{
+    <a style="font-size:24px; color:black; font-family:'Times New Roman', Times, serif" href="@f.Name">@f.Name</a>
+    <br/>
+    <br/>
+}

@@ -50,7 +50,7 @@ namespace WebApplication1.Controllers
             return user.Id;
         }
         [HttpPost]
-        public async Task<IActionResult> AddPupils(IFormFile fileExcel, int Classes, string Letters, int TeacherId)
+        public async Task<IActionResult> AddPupils(IFormFile fileExcel, int Classes, string Letters, string Teachers)
         {
             User user1 = db.Users.Find(getCurrentUserId());
             List<PupilsViewModel> pupilsRegistr = new List<PupilsViewModel>();
@@ -116,9 +116,10 @@ namespace WebApplication1.Controllers
                     }
                 }
             }
-            Pupil pupil = new Pupil();
+            List<Pupil> pupilss = new List<Pupil>();            
             foreach (var p in pupils)
             {
+                Pupil pupil = new Pupil();
                 pupil.LastName = p.LastName;
                 pupil.Name = p.Name;
                 pupil.SecondName = p.SecondName;
@@ -126,19 +127,23 @@ namespace WebApplication1.Controllers
                 pupil.RegistrateSchoolId = p.SchoolId;
                 pupil.ClassId = clas.Id;
                 pupil.UserId = p.UserId;
-                db.Pupils.Add(pupil);
-                db.SaveChanges();
-                pupil.Id = 0;
+                pupilss.Add(pupil);
             }
+            db.Pupils.AddRange(pupilss);
+            db.SaveChanges();
+
+            string[] teach = Teachers.Split(" ");
+            Employee emp = db.Employee.Where(r => r.RegistrateSchoolId == user1.SchoolId && r.LastName == teach[0] && r.Name == teach[1] && r.SecondName == teach[2]).First();
             SchoolClasses schCl = new SchoolClasses();
             schCl.SchoolId = user1.SchoolId;
             schCl.ClassId = clas.Id;
-            schCl.ClassroomTeacherId = TeacherId;
+            schCl.ClassroomTeacherId = emp.Id;
             if (db.SchoolClasses.Where(a => a.SchoolId == schCl.SchoolId && a.ClassId == schCl.ClassId).Count() == 0)
             {
                 db.SchoolClasses.Add(schCl);
-                await db.SaveChangesAsync();
+                
             }
+            await db.SaveChangesAsync();
             return RedirectToAction("Index","Home");
         }
     }
