@@ -1,0 +1,11 @@
+﻿@model WebApplication1.ViewModels.QuarterViewModel
+
+<form method="post" asp-controller="Quarter" asp-action="Quarter">
+    <input type="text" value="I" asp-for="QuarterName" readonly /><input type="date" asp-for="Start" /><input type="date" asp-for="End" />
+    <input type="text" value="II" asp-for="QuarterName" readonly /><input type="date" asp-for="Start" /><input type="date" asp-for="End" />
+    <input type="text" value="III"  asp-for="QuarterName" readonly /><input type="date" asp-for="Start" /><input type="date" asp-for="End" />
+    <input type="text" value="IV" asp-for="QuarterName" readonly /><input type="date" asp-for="Start" /><input type="date" asp-for="End" />
+                                                                                                        <button type="submit" class="btn btn-info btn-rounded" style=" font-size: 12px;" name="button">
+                                                                                                            Добавить
+                                                                                                        </button>
+</form>

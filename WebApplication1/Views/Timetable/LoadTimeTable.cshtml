@@ -5,7 +5,7 @@
 <h2>Расписание для 1-11 классов</h2>
 @foreach (var f in ViewBag.filesToLoad)
 {
-    <a style="font-size:24px; color:black; font-family:'Times New Roman', Times, serif" href="@f.Name">@f.Name</a>
+    <a style="font-size:24px; color:black; font-family:'Times New Roman', Times, serif" href="~/timetable/@f.Name">@f.Name</a>
     <br/>
     <br/>
 }

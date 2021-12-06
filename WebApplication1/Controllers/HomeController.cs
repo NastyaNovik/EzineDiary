@@ -81,10 +81,44 @@ namespace WebApplication1.Controllers
                                   where e.UserId == getCurrentUserId()
                                   select c).Distinct().ToList();
                 ViewBag.classeshref = classeshref;
+
+                var daysOfSubjects = (from t in db.Timetable
+                                      join s in db.SchoolClasses on t.SchoolClassesId equals s.Id
+                                      join c in db.Class on s.ClassId equals c.Id
+                                      join e in db.Employee on t.TeacherId equals e.Id
+                                      join sub in db.Subject on t.SubjectId equals sub.Id
+                                      where e.UserId == getCurrentUserId()
+                                      select t.DayOfWeek).Distinct().ToList();
+                ViewBag.daysOfSubjects = daysOfSubjects;
+
+                if (User.IsInRole("child"))
+                {
+                    var pppp = (from k in db.Pupils
+                                join u in db.Users on k.UserId equals u.Id
+                                where u.Id == getCurrentUserId()
+                                select k.ClassId).First();
+                    var sch = (from s in db.SchoolClasses
+                               join c in db.Class on s.ClassId equals c.Id
+                               join pp in db.Pupils on c.Id equals pp.ClassId
+                               where s.SchoolId == user.SchoolId && s.ClassId == pppp
+                               select s).First();
+
+
+                    var mag = from sm in db.SchoolMagazine
+                              join s in db.Subject on sm.SubjectId equals s.Id
+                              where sm.SchoolClassesId == sch.Id && sm.Homework != null
+                              select new SchoolMagazineView
+                              {
+                                  Homework = sm.Homework,
+                                  Subject=s.Name,
+                                  Date = sm.Date.ToLongDateString()
+                              };
+                   
+                    ViewBag.homework = mag;
+                }
             }
             return View();
         }
-
         public IActionResult Privacy()
         {
             return View();
