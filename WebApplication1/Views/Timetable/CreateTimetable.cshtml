@@ -1,7 +1,7 @@
 ﻿<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
 <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
-
+@{ ViewData["Title"] = "Добавление расписания"; }
 @model WebApplication1.ViewModels.TimeTableViewModel
 <head>
     <style>
@@ -24,8 +24,9 @@
                 outline: none;
                 box-shadow: none;
             }
+
         .container {
-            margin-left:3%;
+            margin-left: 3%;
             padding: 0;
         }
     </style>
@@ -33,8 +34,7 @@
 <select hidden>
     @foreach (var cl in ViewBag.SchoolClasses)
     {
-<option>@cl</option>
-}
+<option>@cl</option>}
 </select>
 <div class="container">
     <ul class="nav nav-tabs">
@@ -592,9 +592,9 @@
                         </tr>
                     </tbody>
                 </table>
-                    <div>
-                        <input type="submit" class="registrB" value="Сохранить" />
-                    </div>
+                <div>
+                    <input type="submit" class="registrB" value="Сохранить" />
+                </div>
             </form>
 
         </div>
@@ -860,9 +860,9 @@
                         </tr>
                     </tbody>
                 </table>
-                    <div>
-                        <input type="submit" class="registrB" value="Сохранить" />
-                    </div>
+                <div>
+                    <input type="submit" class="registrB" value="Сохранить" />
+                </div>
             </form>
         </div>
         <div class="tab-pane fade" id="g">
@@ -1127,9 +1127,9 @@
                         </tr>
                     </tbody>
                 </table>
-                    <div>
-                        <input type="submit" class="registrB" value="Сохранить" />
-                    </div>
+                <div>
+                    <input type="submit" class="registrB" value="Сохранить" />
+                </div>
             </form>
         </div>
         <div class="tab-pane fade" id="d">
@@ -1394,9 +1394,9 @@
                         </tr>
                     </tbody>
                 </table>
-                    <div>
-                        <input type="submit" class="registrB" value="Сохранить" />
-                    </div>
+                <div>
+                    <input type="submit" class="registrB" value="Сохранить" />
+                </div>
             </form>
         </div>
         <div class="tab-pane fade" id="e">
@@ -1661,35 +1661,35 @@
                         </tr>
                     </tbody>
                 </table>
-                    <div>
-                        <input type="submit" class="registrB" value="Сохранить" />
-                    </div>
+                <div>
+                    <input type="submit" class="registrB" value="Сохранить" />
+                </div>
             </form>
         </div>
     </div>
 </div>
-    <script>
-        var arr = new Array();
-        let elements = document.querySelectorAll('select > option');
-        for (let elem of elements) {
-            arr.push(elem.innerHTML);
-        }
-        if (!arr.includes("А")) {
-            document.getElementById("A").hidden = true;
-        }
-        if (!arr.includes("Б")) {
-            document.getElementById("B").hidden = true;
-        }
-        if (!arr.includes("В")) {
-            document.getElementById("V").hidden = true;
-        }
-        if (!arr.includes("Г")) {
-            document.getElementById("G").hidden = true;
-        }
-        if (!arr.includes("Д")) {
-            document.getElementById("D").hidden = true;
-        }
-        if (!arr.includes("Е")) {
-            document.getElementById("E").hidden = true;
-        }
-    </script>
+<script>
+    var arr = new Array();
+    let elements = document.querySelectorAll('select > option');
+    for (let elem of elements) {
+        arr.push(elem.innerHTML);
+    }
+    if (!arr.includes("А")) {
+        document.getElementById("A").hidden = true;
+    }
+    if (!arr.includes("Б")) {
+        document.getElementById("B").hidden = true;
+    }
+    if (!arr.includes("В")) {
+        document.getElementById("V").hidden = true;
+    }
+    if (!arr.includes("Г")) {
+        document.getElementById("G").hidden = true;
+    }
+    if (!arr.includes("Д")) {
+        document.getElementById("D").hidden = true;
+    }
+    if (!arr.includes("Е")) {
+        document.getElementById("E").hidden = true;
+    }
+</script>

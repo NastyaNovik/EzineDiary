@@ -1,4 +1,6 @@
-﻿@model WebApplication1.ViewModels.SchoolMagazineViewModel
+﻿@{ ViewData["Title"] = "Ведение журнала"; }
+
+@model WebApplication1.ViewModels.SchoolMagazineViewModel
 @{int count = 0;}
 <style>
     .container {
@@ -47,32 +49,15 @@
                 }
                 <th>Четверть @ViewBag.Q</th>
             </tr>
-            @*@foreach (var fio in ViewBag.names)
-        {
-            <tr>
-                <td><input class="table-dark" size="30" type="text" readonly value="@fio" asp-for="Pupils_marks" /></td>
-
-
-                @for (int i = 0; i < ViewBag.days.Count + 1; i++)
-                {
-
-                    <td width="10"><input width="10" size="5" class="table-dark" type="text" style="width:25px" asp-for="Pupils_marks" /></td>
-                }
-
-            </tr>
-        }*@
             @foreach (var fio in ViewBag.names)
             {
                 <tr>
                     <td><input class="table-dark" size="30" type="text" readonly value="@fio" asp-for="Pupils_marks[count][0]" /></td>
 
-                    @*@for(int i=0;i<Model.Pupils_marks.Count;i+= ViewBag.days.Count + 1)
-                {*@
                     @for (int i = 1; i < ViewBag.days.Count + 2; i++)
                     {
-
                         <td width="10"><input width="10" size="5" class="table-dark" type="text" style="width:25px" asp-for="@Model.Pupils_marks[count][i]" /></td>
-                        @*}*@}
+                    }
 
                 </tr>
                 count++;
@@ -131,7 +116,7 @@
                 </div>
                 <div class="col-md-3 right-col">
                     <button type="submit" class="btn btn-info btn-rounded" style="float: right; font-size: 12px;" name="button">
-                        Выбрать
+                        Просмотр расписания
                     </button> <br />
                 </div>
             </div>

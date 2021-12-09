@@ -247,7 +247,10 @@ namespace WebApplication1.Controllers
                     countOfMarksInQuarter = 0;
                 }
             }
-
+            ViewBag.clas = Class;
+            ViewBag.ClassLetter = ClassLetter;
+            ViewBag.Subject = Subject;
+            ViewBag.Quart = Quarters;
             return View("ViewMagazine", model);
         }
 

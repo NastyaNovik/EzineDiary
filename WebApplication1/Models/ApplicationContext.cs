@@ -21,9 +21,6 @@ namespace WebApplication1.Models
         public DbSet<SchoolMagazine> SchoolMagazine { get; set; }
         public DbSet<AcademicPerformance> AcademicPerformance { get; set; }
         public DbSet<Quarter> Quarter { get; set; }
-
-        public DbSet<AcademicPerf> Academic { get; set; }
-
         public ApplicationContext(DbContextOptions<ApplicationContext> options)
             : base(options)
         {
