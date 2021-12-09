@@ -1,29 +1,25 @@
-﻿@*<table class="table table-bordered table-dark" style="width:max-content">
-   
+﻿@model WebApplication1.ViewModels.SchoolMagazineViewModel
+@{int count = 0;}
+<table class="table table-bordered table-dark">
     <tr>
         <th>ФИО / Дата</th>
-        @foreach (var col in ViewBag.dates)
+        @foreach (var col in ViewBag.days)
         {
-            <th width="10"><input class="table-dark" width="10" size="3" type="text" readonly value="@col.Date" /></th>
-        }
+<th width="10"><input class="table-dark" width="10" size="3" type="text" readonly value="@col.Day.@col.Month" asp-for="Date" /></th>}
+        <th>Четверть @ViewBag.Q</th>
     </tr>
-    @foreach (var item in ViewBag.m)
+    @foreach (var fio in ViewBag.names)
     {
-            <tr>
-                <td width="300" style="vertical-align: top; font-size: 12px; text-transform: uppercase; color: white; margin: 0 15px">
-                    @item.PupilId
-                </td>
-                <td width="280" style="vertical-align: top; font-size: 12px; text-transform: uppercase; color: white; margin: 0 15px">
-                    @item.Mark
-                </td>
-            </tr>
-}
-    </table>*@
-<table class="table table-bordered table-dark" style="width:max-content">
+<tr>
+    <td><input class="table-dark" size="30" type="text" readonly value="@fio" /></td>
 
-
-    @foreach (var item in ViewBag.comps)
+    @for (int i = 0; i < ViewBag.days.Count + 1; i++)
     {
-        <tr>@item.PupilId</tr>
+
+          <td width="10"><input width="10" size="5" class="table-dark" type="text" style="width:25px" value="@Model.Pupils_marks[count][i]" /></td> @*}
+*@}
+
+</tr>
+        count++;
     }
 </table>

@@ -8,7 +8,7 @@ namespace WebApplication1.ViewModels
     public class SchoolMagazineViewModel
     {
         public List<DateTime> Date { get; set; }
-        public List<string> Pupils_marks { get; set; }
+        public List<List<string>> Pupils_marks { get; set; }
         public string Subject { get; set; }
         public int Class { get; set; }
         public string ClassLetter { get; set; }

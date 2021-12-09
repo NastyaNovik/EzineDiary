@@ -1,4 +1,5 @@
 ﻿@model WebApplication1.ViewModels.SchoolMagazineViewModel
+@{int count = 0;}
 <style>
     .container {
         margin-left: 3%;
@@ -46,19 +47,35 @@
                 }
                 <th>Четверть @ViewBag.Q</th>
             </tr>
+            @*@foreach (var fio in ViewBag.names)
+        {
+            <tr>
+                <td><input class="table-dark" size="30" type="text" readonly value="@fio" asp-for="Pupils_marks" /></td>
+
+
+                @for (int i = 0; i < ViewBag.days.Count + 1; i++)
+                {
+
+                    <td width="10"><input width="10" size="5" class="table-dark" type="text" style="width:25px" asp-for="Pupils_marks" /></td>
+                }
+
+            </tr>
+        }*@
             @foreach (var fio in ViewBag.names)
             {
                 <tr>
-                    <td><input class="table-dark" size="30" type="text" readonly value="@fio" asp-for="Pupils_marks" /></td>
+                    <td><input class="table-dark" size="30" type="text" readonly value="@fio" asp-for="Pupils_marks[count][0]" /></td>
 
-
-                    @for (int i = 0; i < ViewBag.days.Count + 1; i++)
+                    @*@for(int i=0;i<Model.Pupils_marks.Count;i+= ViewBag.days.Count + 1)
+                {*@
+                    @for (int i = 1; i < ViewBag.days.Count + 2; i++)
                     {
 
-                        <td width="10"><input width="10" size="5" class="table-dark" type="text" style="width:25px" asp-for="Pupils_marks" /></td>
-                    }
+                        <td width="10"><input width="10" size="5" class="table-dark" type="text" style="width:25px" asp-for="@Model.Pupils_marks[count][i]" /></td>
+                        @*}*@}
 
                 </tr>
+                count++;
             }
         </table>
         <button type="submit" class="btn btn-info btn-rounded" style="float: right; font-size: 12px;" name="button">
@@ -92,51 +109,63 @@
 
     <br /><br /><br /><br />
     <div style="border:solid">
-        <form asp-action="ViewMagazine2" asp-controller="SchoolMagazine" asp-route-Class="@ViewBag.ClassNumber" asp-route-ClassLetter="@ViewBag.ClassLetter" method="post">
-            <div>
-                <div class="form-group">
-                    <select class="form-control" name="Subject" id="Subject">
-                        @foreach (var cl in ViewBag.subjects)
+        <form asp-action="ViewMagazine" asp-controller="SchoolMagazine" asp-route-Class="@ViewBag.ClassNumber" asp-route-ClassLetter="@ViewBag.ClassLetter" method="post">
+            <div class="row">
+                <div class="col-md-7">
+                    <div class="form-group">
+                        <select class="form-control" name="Subject" id="Subject">
+                            @foreach (var cl in ViewBag.subjects)
+                            {
+                                <option>@cl</option>
+                            }
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <select class="form-control" name="Quarters" id="Quarters">
+                        @foreach (var cl in ViewBag.Quarters)
                         {
                             <option>@cl</option>
                         }
                     </select>
                 </div>
+                <div class="col-md-3 right-col">
+                    <button type="submit" class="btn btn-info btn-rounded" style="float: right; font-size: 12px;" name="button">
+                        Выбрать
+                    </button> <br />
+                </div>
             </div>
-            <button type="submit" class="btn btn-info btn-rounded" style="float: right; font-size: 12px;" name="button">
-                Посмотреть оценки
-            </button> <br /><br /><br />
         </form>
     </div>
 </div>
 
 
 
-    <script>
-        var subject = document.getElementById('Subject');
-        subject.onchange = function () {
-            document.cookie = 'Subject=' + subject.value + '; path=/;';
-        };
-        var quarter = document.getElementById('Quarters');
-        quarter.onchange = function () {
-            document.cookie = 'Quarter=' + quarter.value + '; path=/;';
-        };
-        function getCookie(name) {
-            var matches = document.cookie.match(new RegExp(
-                "(?:^|; )" + name.replace(/([\.$?*|{}\(\)\[\]\\\/\+^])/g, '\\$1') + "=([^;]*)"
-            ));
-            return matches ? decodeURIComponent(matches[1]) : undefined;
-        }
-        var select = document.getElementById('Subject'),
-            cookie = getCookie('Subject');
-        var select2 = document.getElementById('Quarters'),
-            cookie2 = getCookie('Quarter');
-        if (cookie) {
-            select.value = cookie;
-        }
-        if (cookie2) {
-            select2.value = cookie2;
-        }
-        var value = document.getElementById('Subject').value;
-        document.getElementById('sub').value = value
-    </script>
+<script>
+    var subject = document.getElementById('Subject');
+    subject.onchange = function () {
+        document.cookie = 'Subject=' + subject.value + '; path=/;';
+    };
+    var quarter = document.getElementById('Quarters');
+    quarter.onchange = function () {
+        document.cookie = 'Quarter=' + quarter.value + '; path=/;';
+    };
+    function getCookie(name) {
+        var matches = document.cookie.match(new RegExp(
+            "(?:^|; )" + name.replace(/([\.$?*|{}\(\)\[\]\\\/\+^])/g, '\\$1') + "=([^;]*)"
+        ));
+        return matches ? decodeURIComponent(matches[1]) : undefined;
+    }
+    var select = document.getElementById('Subject'),
+        cookie = getCookie('Subject');
+    var select2 = document.getElementById('Quarters'),
+        cookie2 = getCookie('Quarter');
+    if (cookie) {
+        select.value = cookie;
+    }
+    if (cookie2) {
+        select2.value = cookie2;
+    }
+    var value = document.getElementById('Subject').value;
+    document.getElementById('sub').value = value
+</script>
