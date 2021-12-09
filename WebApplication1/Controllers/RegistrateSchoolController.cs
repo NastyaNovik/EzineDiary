@@ -29,9 +29,13 @@ namespace WebApplication1.Controllers
 
         public ActionResult RegistrateSchool()
         {
-            List<School> schoolList = db.Schools.ToList();
-            ViewBag.schools = schoolList;
-            return View();
+            if (User.IsInRole("admin"))
+            {
+                List<School> schoolList = db.Schools.ToList();
+                ViewBag.schools = schoolList;
+                return View();
+            }
+            else return StatusCode(403);
         }
 
         public async Task<IActionResult> Register(RegistrateSchoolViewModel model)

@@ -1,11 +1,13 @@
 ﻿@{ ViewData["Title"] = "Регистрация школы"; }
 @model WebApplication1.ViewModels.RegistrateSchoolViewModel
+@Html.ValidationSummary(true)
 <html>
 <head>
     <link src="~/lib/dist/jquery-ui/themes/base/all.css" rel="stylesheet" type="text/css" />
     <link rel="stylesheet" href="//code.jquery.com/ui/1.13.0/themes/base/jquery-ui.css">
     <link rel="stylesheet" type="text/css" href="~/css/RegistrTeachAdmin.css" />
     <link rel="stylesheet" type="text/css" href="~/css/font-awesome/css/font-awesome.css" />
+    <link rel="stylesheet" type="text/css" href="~/css/site.css" />
     <style>
         .ui-autocomplete {
             position: absolute;
@@ -89,16 +91,16 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></script>
 
     <script type="text/javascript">
-            var arr = new Array();
-            let elements = document.querySelectorAll('select > option');
-            for (let elem of elements) {
-                arr.push(elem.innerHTML);
-            }
-            $(function () {
-                $("#Name").autocomplete({
-                    source: arr
-                });
+        var arr = new Array();
+        let elements = document.querySelectorAll('select > option');
+        for (let elem of elements) {
+            arr.push(elem.innerHTML);
+        }
+        $(function () {
+            $("#Name").autocomplete({
+                source: arr
             });
+        });
     </script>
 </body>
 </html>
