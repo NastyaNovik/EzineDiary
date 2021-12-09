@@ -254,7 +254,7 @@ namespace WebApplication1.Controllers
             return View("ViewMagazine", model);
         }
 
-        public async Task<IActionResult> SaveMagazine(SchoolMagazineViewModel model, int Class, string ClassLetter)
+        public async Task<IActionResult> SaveMagazine(SchoolMagazineViewModel model, int Class, string ClassLetter, string Quarters)
         {
             Subject subject = db.Subject.Where(s => s.Name == model.Subject).First();
             Employee emp = db.Employee.Where(e => e.UserId == getCurrentUserId()).First();
@@ -334,7 +334,7 @@ namespace WebApplication1.Controllers
             await db.AcademicPerformance.AddRangeAsync(acad);
             await db.SaveChangesAsync();
 
-            return RedirectToAction("Index", "Home");
+            return RedirectToAction("ViewMagazine", new { Subject=subject.Name, Class= Class, ClassLetter= ClassLetter, Quarters= Quarters });
         }
 
         public IActionResult AddHomework(SchoolMagazineViewModel model, int Class, string ClassLetter, DateTime dates)
