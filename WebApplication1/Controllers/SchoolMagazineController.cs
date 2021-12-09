@@ -311,7 +311,7 @@ namespace WebApplication1.Controllers
             var pupIds = db.Pupils.Where(s => s.RegistrateSchoolId == emp.RegistrateSchoolId && s.ClassId == cl.Id).ToList();
 
             var da = db.SchoolMagazine.OrderByDescending(i => i.Id).Take(count).ToList();
-            var dasort = da.OrderBy(s => s.Id).ToList();
+            var dasort = da.OrderBy(s => s.Date).ToList();
             List<AcademicPerformance> acad = new List<AcademicPerformance>();
             for (int i = 0; i < pupils_marks.Count(); i++)
             {
