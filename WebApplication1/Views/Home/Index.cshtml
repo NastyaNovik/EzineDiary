@@ -74,14 +74,19 @@
                                                         </tr>}
                                                                     </table>
                                                                 </div>}
+
+@if (User.IsInRole("teacher") || User.IsInRole("child"))
+{
+
+<a class="btn btn1 btn-rounded" href="/Timetable/LoadTimeTable/?SchoolId=@ViewBag.SchoolId">Просмотр расписания</a>}
 @if (User.IsInRole("teacher"))
 {
-<a class="btn btn1 btn-rounded" href="/Timetable/LoadTimeTable/?SchoolId=@ViewBag.SchoolId">Просмотр расписания</a>
+<h2>Выберите класс для ведения журнала</h2>
+                @foreach (var cl in ViewBag.classeshref)
+                {
+<a style="font-size:24px; color:black; font-family:'Times New Roman', Times, serif" asp-controller="SchoolMagazine" asp-action="SchoolMagazine" asp-route-Class="@cl.ClassNumber" asp-route-ClassLetter="@cl.ClassLetter" asp-route-daysOfSubjects="@ViewBag.daysOfSubjects">@cl.ClassNumber "@cl.ClassLetter"</a>
+                    <br />}}
 
-                <h2>Выберите класс для ведения журнала</h2>
-                                @foreach (var cl in ViewBag.classeshref)
-                                {
-                <a style="font-size:24px; color:black; font-family:'Times New Roman', Times, serif" asp-controller="SchoolMagazine" asp-action="SchoolMagazine" asp-route-Class="@cl.ClassNumber" asp-route-ClassLetter="@cl.ClassLetter" asp-route-daysOfSubjects="@ViewBag.daysOfSubjects">@cl.ClassNumber "@cl.ClassLetter"</a><br/>}}
 @if (User.IsInRole("child"))
 {
 <h2>Домашние задания</h2>
