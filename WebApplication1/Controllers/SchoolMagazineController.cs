@@ -223,6 +223,7 @@ namespace WebApplication1.Controllers
             }
             double su = 0;
             int countOfMarksInQuarter = 0;
+            int nIndex = 0;
             for (int i = 0; i < lists.Count(); i++)
             {
                 for (int j = 0; j < dates.Count() + 1; j += dates.Count())
@@ -230,20 +231,29 @@ namespace WebApplication1.Controllers
                         if (j != dates.Count)
                         {
                             model.Pupils_marks.Add(lists[i].GetRange(j, dates.Count()));
-                            su = lists[i].Sum(x => Convert.ToDouble(x));
+                        foreach(var n in lists[i])
+                        {
+                            if (n != "н")
+                            {
+                                su += Convert.ToDouble(n);
+                            }
+                            //lists[i].RemoveAt(nIndex);
+                        }
+                           // su = lists[i].Sum(x => Convert.ToDouble(x));
                         }
                         else
                         {
 
                             for (int k = 0; k < lists[i].Count; k++)
                             {
-                                if (lists[i][k] != null)
+                                if (lists[i][k] != null&&lists[i][k]!="н")
                                 {
                                     countOfMarksInQuarter++;
                                 }
                             }
                             model.Pupils_marks[i].Add(Convert.ToString(Math.Round(su / countOfMarksInQuarter, MidpointRounding.AwayFromZero)));
-                        }                    
+                        su = 0;
+                    }
                     countOfMarksInQuarter = 0;
                 }
             }
