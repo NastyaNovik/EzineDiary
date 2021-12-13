@@ -1,6 +1,10 @@
-﻿@{ ViewData["Title"] = "Главная"; }
+﻿
+@{ ViewData["Title"] = "Главная"; }
 <link rel="stylesheet" type="text/css" href="~/css/font-awesome/css/font-awesome.css" />
 <link rel="stylesheet" type="text/css" href="~/css/index.css" />
+<script src="~/lib/jquery/dist/jquery.js"></script>
+<script src="~/lib/jquery/dist/jquery-ajax-unobtrusive/dist/jquery.unobtrusive-ajax.js"></script>
+<script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.js"></script>
 @if (!User.Identity.IsAuthenticated)
 {
 <div class="text-center">
@@ -89,15 +93,49 @@
 
 @if (User.IsInRole("child"))
 {
-<h2>Домашние задания</h2>
-                <table class="table table-bordered table-dark">
+<br /><br/>
+                <h2>Домашние задания</h2>
+                                <table class="table table-bordered table-dark">
 
-                    @foreach (var h in ViewBag.homework)
-                    {
-    <tr>
-        <td>@h.Homework</td>
-        <td>@h.Subject</td>
-        <td>@h.Date</td>
-    </tr>}
+                                    @foreach (var h in ViewBag.homework)
+                                    {
+                    <tr>
+                        <td>@h.Homework</td>
+                        <td>@h.Subject</td>
+                        <td>@h.Date</td>
+                    </tr>
+}
 
-                </table>}
+
+                                </table>
+                                                <br /><br/>
+                                                                <h2>Оценки</h2>
+                                                                                <div style="border:solid">
+                                                                                    <form action="/Home/ViewMarksPart" data-ajax="true" data-ajax-mode="replace" data-ajax-update="#results" id="form0" method="post">
+                                                                                        <div class="row">
+                                                                                            <div class="col-md-7">
+                                                                                                <div class="form-group">
+                                                                                                    <select class="form-control" name="Subject" id="Subject">
+                                                                                                        @foreach (var cl in ViewBag.subjects)
+                                                                                                        {
+                                                                                        <option>@cl</option>}
+                                                                                                    </select>
+                                                                                                </div>
+                                                                                            </div>
+                                                                                            <div class="col-md-2">
+                                                                                                <select class="form-control" name="Quarters" id="Quarters">
+                                                                                                    @foreach (var cl in ViewBag.Quarters)
+                                                                                                    {
+                                                                                    <option>@cl</option>}
+                                                                                                </select>
+                                                                                            </div>
+                                                                                            <div class="col-md-3 right-col">
+                                                                                                <button type="submit" class="btn btn-info btn-rounded" style="float: right; font-size: 12px;" name="button">
+                                                                                                    Выбрать
+                                                                                                </button> <br />
+                                                                                            </div>
+                                                                                        </div>
+                                                                                    </form>
+                                                                                </div>
+
+                                                                                                <div id="results"></div>}
