@@ -53,7 +53,7 @@ namespace WebApplication1.Controllers
                     if (result.Succeeded)
                     {
                         await _userManager.AddToRoleAsync(user, "administration");
-                        return RedirectToAction("AddEmployee", "Employee", new { position = model.Position });
+                        return RedirectToAction("AddEmployee", "Employee", new { position = model.Position, UserId = user.Id });
                     }
                     else
                     {
@@ -91,6 +91,21 @@ namespace WebApplication1.Controllers
                 context.SaveChanges();
                 IQueryable<SchoolClasses> sch = db.SchoolClasses.Where(s => s.SchoolId == school.Id);
                 context.SchoolClasses.RemoveRange(sch);
+                context.SaveChanges();
+            }
+            using (var context = new ApplicationContext(options))
+            {
+                foreach (var pupil in context.Pupils.Where(e => e.RegistrateSchoolId == school.Id))
+                {
+                    User user = await _userManager.FindByIdAsync(pupil.UserId);
+                    if (user != null)
+                    {
+                        IEnumerable<string> userRoles = await _userManager.GetRolesAsync(user);
+                        await _userManager.RemoveFromRolesAsync(user, userRoles);
+                        await _userManager.DeleteAsync(user);
+                    }
+                    context.Pupils.Remove(pupil);
+                }
                 context.SaveChanges();
             }
             using (var context = new ApplicationContext(options))

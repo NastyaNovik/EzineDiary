@@ -23,7 +23,7 @@ namespace WebApplication1.Controllers
         private readonly UserManager<User> _userManager;
         private readonly SignInManager<User> _signInManager;
         RoleManager<IdentityRole> _roleManager;
-        private static string DefaultImageUrl= "https://res.cloudinary.com/dwigle/image/upload/v1629306209/images/uyut_bishkek_a4qq8l.png";
+        private static string DefaultImageUrl = "https://res.cloudinary.com/dwigle/image/upload/v1629306209/images/uyut_bishkek_a4qq8l.png";
         public EmployeeController(ApplicationContext context, RoleManager<IdentityRole> roleManager, UserManager<User> userManager, SignInManager<User> signInManager)
         {
             db = context;
@@ -52,14 +52,15 @@ namespace WebApplication1.Controllers
             else return DefaultImageUrl;
         }
         [HttpGet]
-        public IActionResult AddEmployee(string position)
+        public IActionResult AddEmployee(string position, string UserId)
         {
+            ViewBag.UserId = UserId;
             ViewBag.position = position;
             ViewBag.Subjects = db.Subject.ToList();
             return View();
         }
         [HttpPost]
-        public async Task <IActionResult> AddEmployee(IFormFile uploadedFile, string position, AddEmployeeViewModel model, string[] subjects)
+        public async Task<IActionResult> AddEmployee(IFormFile uploadedFile, string position, AddEmployeeViewModel model, string[] subjects, string UserId)
         {
             int count = db.Employee.Where(p => p.LastName == model.LastName && p.Name == model.Name && p.SecondName == model.SecondName && p.PhoneNumber == model.PhoneNumber).Count();
             if (count == 0)
@@ -70,7 +71,7 @@ namespace WebApplication1.Controllers
                     result += p;
                     result += ",";
                 }
-                User user = await db.Users.LastAsync();
+                User user = await db.Users.FindAsync(UserId);
                 User user2 = await db.Users.FindAsync(getCurrentUserId());
                 Position ChPosition = db.Position.Where(p => p.Name == position).First();
                 if (User.IsInRole("admin"))
@@ -107,7 +108,7 @@ namespace WebApplication1.Controllers
                     };
                     db.Employee.Add(employee);
                 }
-                
+
                 await db.SaveChangesAsync();
                 return RedirectToAction("Index", "Home");
             }
@@ -120,7 +121,7 @@ namespace WebApplication1.Controllers
         [HttpGet]
         public IActionResult RegisterTeachersAdministration()
         {
-            ViewBag.Positions = db.Position.Where(a=>a.Name!="Директор").ToList();
+            ViewBag.Positions = db.Position.Where(a => a.Name != "Директор").ToList();
             if (User.Identity.IsAuthenticated)
             {
                 User user = db.Users.Find(getCurrentUserId());
@@ -138,12 +139,12 @@ namespace WebApplication1.Controllers
                 if (model.Position == "Учитель")
                 {
                     await _userManager.AddToRoleAsync(user, "teacher");
-                    return RedirectToAction("AddEmployee", "Employee", new { position = model.Position });
+                    return RedirectToAction("AddEmployee", "Employee", new { position = model.Position, UserId = user.Id });
                 }
                 else
                 {
                     await _userManager.AddToRoleAsync(user, "administration");
-                    return RedirectToAction("AddEmployee", "Employee", new { position = model.Position });
+                    return RedirectToAction("AddEmployee", "Employee", new { position = model.Position, UserId = user.Id });
                 }
             }
             return View();
@@ -187,7 +188,7 @@ namespace WebApplication1.Controllers
         [HttpPost]
         public async Task<IActionResult> EditEmployee(string UserId, List<string> roles, int SchoolId)
         {
-           
+
             User user = await _userManager.FindByIdAsync(UserId);
             if (user != null)
             {
@@ -217,9 +218,9 @@ namespace WebApplication1.Controllers
                     db.SaveChanges();
                     return RedirectToAction("Index", "Home");
                 }
-                else if(roles.Contains("Директор"))
+                else if (roles.Contains("Директор"))
                 {
-                    int countDir = db.Employee.Where(e => e.PositionId==1&&e.RegistrateSchoolId==SchoolId).Count();
+                    int countDir = db.Employee.Where(e => e.PositionId == 1 && e.RegistrateSchoolId == SchoolId).Count();
                     if (countDir == 0)
                     {
                         var userRoles = await _userManager.GetRolesAsync(user);
@@ -234,7 +235,7 @@ namespace WebApplication1.Controllers
                     }
                     else
                     {
-                        return RedirectToAction("EditEmployee","Employee",new { UserId = user.Id, SchoolId = SchoolId, Error="В этой школе уже есть директор!" });
+                        return RedirectToAction("EditEmployee", "Employee", new { UserId = user.Id, SchoolId = SchoolId, Error = "В этой школе уже есть директор!" });
                     }
                 }
                 else if (roles.Contains("Заместитель директора по учебной части"))

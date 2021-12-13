@@ -38,8 +38,7 @@
                     <i class="fa fa-trash text-danger rounded-circle bg-white mr-1" style="padding: 5px 7px;"></i>Удалить школу
                 </button>
             </td>
-        </tr>
-}
+        </tr>}
                         </table>
                     </div>}}
 </form>
@@ -75,7 +74,8 @@
                                                                 </a>
 
                                                             </td>
-                                                        </tr>}
+                                                        </tr>
+}
                                                                     </table>
                                                                 </div>}
 
@@ -89,11 +89,13 @@
                 @foreach (var cl in ViewBag.classeshref)
                 {
 <a style="font-size:24px; color:black; font-family:'Times New Roman', Times, serif" asp-controller="SchoolMagazine" asp-action="SchoolMagazine" asp-route-Class="@cl.ClassNumber" asp-route-ClassLetter="@cl.ClassLetter" asp-route-daysOfSubjects="@ViewBag.daysOfSubjects">@cl.ClassNumber "@cl.ClassLetter"</a>
-                    <br />}}
+                    <br />
+}}
 
 @if (User.IsInRole("child"))
 {
-<br /><br/>
+<br />
+<br />
                 <h2>Домашние задания</h2>
                                 <table class="table table-bordered table-dark">
 
@@ -103,12 +105,12 @@
                         <td>@h.Homework</td>
                         <td>@h.Subject</td>
                         <td>@h.Date</td>
-                    </tr>
-}
+                    </tr>}
 
 
                                 </table>
-                                                <br /><br/>
+                                                <br />
+                                                <br />
                                                                 <h2>Оценки</h2>
                                                                                 <div style="border:solid">
                                                                                     <form action="/Home/ViewMarksPart" data-ajax="true" data-ajax-mode="replace" data-ajax-update="#results" id="form0" method="post">
@@ -118,7 +120,8 @@
                                                                                                     <select class="form-control" name="Subject" id="Subject">
                                                                                                         @foreach (var cl in ViewBag.subjects)
                                                                                                         {
-                                                                                        <option>@cl</option>}
+                                                                                        <option>@cl</option>
+}
                                                                                                     </select>
                                                                                                 </div>
                                                                                             </div>
@@ -126,7 +129,8 @@
                                                                                                 <select class="form-control" name="Quarters" id="Quarters">
                                                                                                     @foreach (var cl in ViewBag.Quarters)
                                                                                                     {
-                                                                                    <option>@cl</option>}
+                                                                                    <option>@cl</option>
+}
                                                                                                 </select>
                                                                                             </div>
                                                                                             <div class="col-md-3 right-col">

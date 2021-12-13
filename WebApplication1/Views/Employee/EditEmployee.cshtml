@@ -1,8 +1,6 @@
 ﻿@using Microsoft.AspNetCore.Identity
 @model WebApplication1.ViewModels.ChangeRoleViewModel
-@{
-    ViewBag.Title = "Редактирование роли для пользователя";
-}
+@{ ViewBag.Title = "Редактирование роли для пользователя"; }
 <link rel="stylesheet" type="text/css" href="~/css/font-awesome.min.css" />
 <style>
     .registrB {
@@ -35,16 +33,15 @@
         <div class="form-group" style="font-size:26px;">
             @foreach (IdentityRole role in Model.AllRoles)
             {
-                <input type="radio" id="roles" name="roles" value="@role.Name" style="display:inline-block" onclick="handleClick(this);"
-                       @(Model.UserRoles.Contains(role.Name) ? "checked=\"checked\"" : "") />@role.Name <br />
-                }
-        <p id="role" hidden>
-            <br/>
-            <input type="radio" id="roles" name="roles" value="Директор" style="display:inline-block" />Директор<br/>
-            <input type="radio" id="roles" name="roles" value="Заместитель директора по учебной части" style="display:inline-block" />Заместитель директора по учебной части<br/>
-            <input type="radio" id="roles" name="roles" value="Заместитель директора по воспитательной работе" style="display:inline-block" />Заместитель директора по воспитательной работе
+<input type="radio" id="roles" name="roles" value="@role.Name" style="display:inline-block" onclick="handleClick(this);"
+       @(Model.UserRoles.Contains(role.Name) ? "checked=\"checked\"" : "") />@role.Name <br />}
+            <p id="role" hidden>
+                <br />
+                <input type="radio" id="roles" name="roles" value="Директор" style="display:inline-block" />Директор<br />
+                <input type="radio" id="roles" name="roles" value="Заместитель директора по учебной части" style="display:inline-block" />Заместитель директора по учебной части<br />
+                <input type="radio" id="roles" name="roles" value="Заместитель директора по воспитательной работе" style="display:inline-block" />Заместитель директора по воспитательной работе
 
-        </p>
+            </p>
         </div>
         <button type="submit" class="registrB">Сохранить</button>
     </form>
@@ -66,4 +63,3 @@
     }
 </script>
 
-   

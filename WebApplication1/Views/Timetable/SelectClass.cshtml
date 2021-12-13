@@ -26,14 +26,15 @@
         }
 </style>
 <center>
-    <h2>Выберите классы, для которых нужно добавить расписание</h2>
+    <h2>Выберите класс, для которого нужно добавить расписание</h2>
 
     <form method="post" asp-controller="Timetable" asp-action="CreateTimetable">
         <div class="form-group ui-widget col-xl-11">
-            <select class="form-control" multiple name="Letters" id="select">
+            <select class="form-control" name="Letters" id="select">
                 @foreach (var cl in ViewBag.SchoolClassesLetters)
                 {
-    <option>@cl</option>}
+    <option>@cl</option>
+}
             </select>
         </div>
         <button type="submit" class="registrB" style="font-size:20px;" asp-controller="Timetable" asp-action="CreateTimetable" asp-route-Class="1" name="button">

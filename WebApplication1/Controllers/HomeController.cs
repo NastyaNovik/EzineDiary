@@ -18,7 +18,7 @@ namespace WebApplication1.Controllers
     {
         private ApplicationContext db;
         IWebHostEnvironment _appEnvironment;
-        public HomeController(ApplicationContext context,IWebHostEnvironment appEnvironment)
+        public HomeController(ApplicationContext context, IWebHostEnvironment appEnvironment)
         {
             db = context;
             _appEnvironment = appEnvironment;
@@ -47,6 +47,9 @@ namespace WebApplication1.Controllers
         public ActionResult ViewMarksPart(string Subject, string Quarters)
         {
             User user = db.Users.Where(i => i.Id == getCurrentUserId()).First();
+            Pupil pup = db.Pupils.Where(i => i.UserId == getCurrentUserId()).First();
+            var Class = db.Class.Where(i => i.Id == pup.ClassId).Select(c => c.ClassNumber).First();
+            var ClassLetter = db.Class.Where(i => i.Id == pup.ClassId).Select(c => c.ClassLetter).First();
 
             var daysOfSubjects = (from t in db.Timetable
                                   join s in db.SchoolClasses on t.SchoolClassesId equals s.Id
@@ -54,12 +57,12 @@ namespace WebApplication1.Controllers
                                   join a in db.Class on s.ClassId equals a.Id
                                   join e in db.Pupils on a.Id equals e.ClassId
                                   join sub in db.Subject on sm.SubjectId equals sub.Id
-                                  where e.UserId == getCurrentUserId() && sub.Name == Subject &&t.SubjectId==sm.SubjectId
+                                  where e.UserId == getCurrentUserId() && sub.Name == Subject && t.SubjectId == sm.SubjectId
                                   select t.DayOfWeek).Distinct().ToList();
 
             var sch = (from s in db.SchoolClasses
                        join c in db.Class on s.ClassId equals c.Id
-                       where s.SchoolId == user.SchoolId && c.ClassNumber == 1 && c.ClassLetter == "Б"
+                       where s.SchoolId == user.SchoolId && c.ClassNumber == Class && c.ClassLetter == ClassLetter
                        select s).First();
 
             var subb = db.Subject.Where(s => s.Name == Subject).First();
@@ -82,7 +85,7 @@ namespace WebApplication1.Controllers
                           join s in db.SchoolClasses on t.SchoolClassesId equals s.Id
                           join c in db.Class on s.ClassId equals c.Id
                           join p in db.Pupils on c.Id equals p.ClassId
-                          where c.ClassNumber == 1 && c.ClassLetter == "Б" && p.RegistrateSchoolId == user.SchoolId && p.UserId==getCurrentUserId()
+                          where c.ClassNumber == 1 && c.ClassLetter == "Б" && p.RegistrateSchoolId == user.SchoolId && p.UserId == getCurrentUserId()
                           orderby p.LastName
                           select p.LastName + " " + p.Name + " " + p.SecondName).Distinct().ToList();
 
@@ -224,11 +227,11 @@ namespace WebApplication1.Controllers
                 ViewBag.emplyeesOfSchool = employeesOfSchool;
 
                 var classeshref = (from t in db.Timetable
-                                  join s in db.SchoolClasses on t.SchoolClassesId equals s.Id
-                                  join c in db.Class on s.ClassId equals c.Id
-                                  join e in db.Employee on t.TeacherId equals e.Id
-                                  where e.UserId == getCurrentUserId()
-                                  select c).Distinct().ToList();
+                                   join s in db.SchoolClasses on t.SchoolClassesId equals s.Id
+                                   join c in db.Class on s.ClassId equals c.Id
+                                   join e in db.Employee on t.TeacherId equals e.Id
+                                   where e.UserId == getCurrentUserId()
+                                   select c).Distinct().ToList();
                 ViewBag.classeshref = classeshref;
 
                 var daysOfSubjects = (from t in db.Timetable
@@ -259,10 +262,10 @@ namespace WebApplication1.Controllers
                               select new SchoolMagazineView
                               {
                                   Homework = sm.Homework,
-                                  Subject=s.Name,
+                                  Subject = s.Name,
                                   Date = sm.Date.ToLongDateString()
                               };
-                   
+
                     ViewBag.homework = mag;
 
                     ViewBag.Quarters = db.Quarter.Select(q => q.QuarterName).ToList();

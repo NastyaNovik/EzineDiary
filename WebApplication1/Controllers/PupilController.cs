@@ -35,11 +35,13 @@ namespace WebApplication1.Controllers
             return User.FindFirst(ClaimTypes.NameIdentifier).Value;
         }
         [HttpGet]
-        public IActionResult AddPupils()
+        public IActionResult AddPupils(string Error)
         {
+            
             User user = db.Users.Find(getCurrentUserId());
+            ViewBag.Error = Error;
             ViewBag.SchoolId = user.SchoolId;
-            ViewBag.SchoolClasses = db.Class.Select(c=>c.ClassNumber).Distinct().ToList();
+            ViewBag.SchoolClasses = db.Class.Select(c => c.ClassNumber).Distinct().ToList();
             ViewBag.SchoolLetters = db.Class.Select(c => c.ClassLetter).Distinct().ToList();
             ViewBag.Teachers = db.Employee.Where(e => e.RegistrateSchoolId == user.SchoolId && e.PositionId == 4);
             return View();
@@ -52,17 +54,34 @@ namespace WebApplication1.Controllers
         [HttpPost]
         public async Task<IActionResult> AddPupils(IFormFile fileExcel, int Classes, string Letters, string Teachers)
         {
+            
             User user1 = db.Users.Find(getCurrentUserId());
-            List<PupilsViewModel> pupilsRegistr = new List<PupilsViewModel>();
-            string fName = fileExcel.FileName;
-            string path = Path.Combine(_environment.ContentRootPath, "uploads/" + fName);
-            Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
-            using (var stream = new MemoryStream())
+            Class cl = db.Class.Where(c => c.ClassNumber == Classes && c.ClassLetter == Letters).First();
+            var cls = (from c in db.Class
+                      join sc in db.SchoolClasses on c.Id equals sc.ClassId
+                      where sc.SchoolId == user1.SchoolId &&sc.ClassId==cl.Id
+                      select c.ClassNumber).ToList();
+            var clsL = (from c in db.Class
+                       join sc in db.SchoolClasses on c.Id equals sc.ClassId
+                       where sc.SchoolId == user1.SchoolId && sc.ClassId == cl.Id
+                        select c.ClassLetter).ToList();
+            if (cls.Contains(Classes) && clsL.Contains(Letters))
             {
-                await fileExcel.CopyToAsync(stream);
-                stream.Position = 0;
-                using (var reader = ExcelReaderFactory.CreateReader(stream))
+                string Error = "Этот класс уже зарегистрирован!";
+                return RedirectToAction("AddPupils",new { Error = Error });
+            }
+            else
+            {
+                List<PupilsViewModel> pupilsRegistr = new List<PupilsViewModel>();
+                string fName = fileExcel.FileName;
+                string path = Path.Combine(_environment.ContentRootPath, "uploads/" + fName);
+                Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
+                using (var stream = new MemoryStream())
                 {
+                    await fileExcel.CopyToAsync(stream);
+                    stream.Position = 0;
+                    using (var reader = ExcelReaderFactory.CreateReader(stream))
+                    {
                         while (reader.Read())
                         {
                             pupilsRegistr.Add(new PupilsViewModel
@@ -73,78 +92,79 @@ namespace WebApplication1.Controllers
                                 SchoolId = user1.SchoolId
                             });
                         }
-                }
-            }
-            foreach (var pup in pupilsRegistr)
-            {
-                User user = new User { Email = pup.Email, UserName = pup.UserName, SchoolId = pup.SchoolId };
-                var result = await _userManager.CreateAsync(user, pup.Password);
-                if (result.Succeeded)
-                {
-                    await _userManager.AddToRoleAsync(user, "child");
-                }
-                else
-                {
-                    foreach (var error in result.Errors)
-                    {
-                        ModelState.AddModelError(string.Empty, error.Description);
                     }
                 }
-            }
-            Class clas = db.Class.Where(c => c.ClassNumber == Classes && c.ClassLetter == Letters).First();
-            List<PupilsViewModel> pupils = new List<PupilsViewModel>();
-            Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
-            using (var stream = new MemoryStream())
-            {
-                fileExcel.CopyTo(stream);
-                stream.Position = 0;
-                using (var reader = ExcelReaderFactory.CreateReader(stream))
+                foreach (var pup in pupilsRegistr)
                 {
-                    while (reader.Read())
+                    User user = new User { Email = pup.Email, UserName = pup.UserName, SchoolId = pup.SchoolId };
+                    var result = await _userManager.CreateAsync(user, pup.Password);
+                    if (result.Succeeded)
                     {
-                        pupils.Add(new PupilsViewModel
+                        await _userManager.AddToRoleAsync(user, "child");
+                    }
+                    else
+                    {
+                        foreach (var error in result.Errors)
                         {
-                            LastName = reader.GetValue(1).ToString(),
-                            Name = reader.GetValue(2).ToString(),
-                            SecondName = reader.GetValue(3).ToString(),
-                            PhoneNumber = reader.GetValue(4).ToString(),
-                            SchoolId = user1.SchoolId,
-                            ClassNumber = clas.ClassNumber,
-                            ClassLetter = clas.ClassLetter,
-                            UserId = getUserIdFromUserName(reader.GetValue(0).ToString())
-                        });
+                            ModelState.AddModelError(string.Empty, error.Description);
+                        }
                     }
                 }
-            }
-            List<Pupil> pupilss = new List<Pupil>();            
-            foreach (var p in pupils)
-            {
-                Pupil pupil = new Pupil();
-                pupil.LastName = p.LastName;
-                pupil.Name = p.Name;
-                pupil.SecondName = p.SecondName;
-                pupil.PhoneNumber = p.PhoneNumber;
-                pupil.RegistrateSchoolId = p.SchoolId;
-                pupil.ClassId = clas.Id;
-                pupil.UserId = p.UserId;
-                pupilss.Add(pupil);
-            }
-            db.Pupils.AddRange(pupilss);
-            db.SaveChanges();
+                Class clas = db.Class.Where(c => c.ClassNumber == Classes && c.ClassLetter == Letters).First();
+                List<PupilsViewModel> pupils = new List<PupilsViewModel>();
+                Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
+                using (var stream = new MemoryStream())
+                {
+                    fileExcel.CopyTo(stream);
+                    stream.Position = 0;
+                    using (var reader = ExcelReaderFactory.CreateReader(stream))
+                    {
+                        while (reader.Read())
+                        {
+                            pupils.Add(new PupilsViewModel
+                            {
+                                LastName = reader.GetValue(1).ToString(),
+                                Name = reader.GetValue(2).ToString(),
+                                SecondName = reader.GetValue(3).ToString(),
+                                PhoneNumber = reader.GetValue(4).ToString(),
+                                SchoolId = user1.SchoolId,
+                                ClassNumber = clas.ClassNumber,
+                                ClassLetter = clas.ClassLetter,
+                                UserId = getUserIdFromUserName(reader.GetValue(0).ToString())
+                            });
+                        }
+                    }
+                }
+                List<Pupil> pupilss = new List<Pupil>();
+                foreach (var p in pupils)
+                {
+                    Pupil pupil = new Pupil();
+                    pupil.LastName = p.LastName;
+                    pupil.Name = p.Name;
+                    pupil.SecondName = p.SecondName;
+                    pupil.PhoneNumber = p.PhoneNumber;
+                    pupil.RegistrateSchoolId = p.SchoolId;
+                    pupil.ClassId = clas.Id;
+                    pupil.UserId = p.UserId;
+                    pupilss.Add(pupil);
+                }
+                db.Pupils.AddRange(pupilss);
+                db.SaveChanges();
 
-            string[] teach = Teachers.Split(" ");
-            Employee emp = db.Employee.Where(r => r.RegistrateSchoolId == user1.SchoolId && r.LastName == teach[0] && r.Name == teach[1] && r.SecondName == teach[2]).First();
-            SchoolClasses schCl = new SchoolClasses();
-            schCl.SchoolId = user1.SchoolId;
-            schCl.ClassId = clas.Id;
-            schCl.ClassroomTeacherId = emp.Id;
-            if (db.SchoolClasses.Where(a => a.SchoolId == schCl.SchoolId && a.ClassId == schCl.ClassId).Count() == 0)
-            {
-                db.SchoolClasses.Add(schCl);
-                
+                string[] teach = Teachers.Split(" ");
+                Employee emp = db.Employee.Where(r => r.RegistrateSchoolId == user1.SchoolId && r.LastName == teach[0] && r.Name == teach[1] && r.SecondName == teach[2]).First();
+                SchoolClasses schCl = new SchoolClasses();
+                schCl.SchoolId = user1.SchoolId;
+                schCl.ClassId = clas.Id;
+                schCl.ClassroomTeacherId = emp.Id;
+                if (db.SchoolClasses.Where(a => a.SchoolId == schCl.SchoolId && a.ClassId == schCl.ClassId).Count() == 0)
+                {
+                    db.SchoolClasses.Add(schCl);
+
+                }
+                await db.SaveChangesAsync();
+                return RedirectToAction("Index", "Home");
             }
-            await db.SaveChangesAsync();
-            return RedirectToAction("Index","Home");
         }
     }
 }

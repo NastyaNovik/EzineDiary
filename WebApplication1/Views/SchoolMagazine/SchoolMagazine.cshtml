@@ -17,8 +17,7 @@
                     <select class="form-control" name="Subject" id="Subject">
                         @foreach (var cl in ViewBag.subjects)
                         {
-                            <option>@cl</option>
-                        }
+            <option>@cl</option>}
                     </select>
                 </div>
             </div>
@@ -26,8 +25,7 @@
                 <select class="form-control" name="Quarters" id="Quarters">
                     @foreach (var cl in ViewBag.Quarters)
                     {
-                        <option>@cl</option>
-                    }
+        <option>@cl</option>}
                 </select>
             </div>
             <div class="col-md-3 right-col">
@@ -46,20 +44,23 @@
                 <th>ФИО / Дата</th>
                 @foreach (var col in ViewBag.days)
                 {
-    <th width="10"><input class="table-dark" width="10" size="3" type="text" readonly value="@col.Day.@col.Month" asp-for="Date" /></th>}
+    <th width="10"><input class="table-dark" width="10" size="3" type="text" readonly value="@col.Day.@col.Month" asp-for="Date" /></th>
+}
                 <th>Четверть @ViewBag.Q</th>
             </tr>
             @foreach (var fio in ViewBag.names)
             {
-    <tr>
-        <td><input class="table-dark" size="30" type="text" readonly value="@fio" asp-for="Pupils_marks[count][0]" /></td>
+<tr>
+    <td><input class="table-dark" size="30" type="text" readonly value="@fio" asp-for="Pupils_marks[count][0]" /></td>
 
-        @for (int i = 1; i < ViewBag.days.Count + 2; i++)
-        {
-    <td width="10"><input width="10" size="5" class="table-dark" type="text" style="width:25px" asp-for="@Model.Pupils_marks[count][i]" /></td>}
+    @for (int i = 1; i < ViewBag.days.Count + 2; i++)
+    {
+<td width="10"><input width="10" size="5" class="table-dark" type="text" style="width:25px" asp-for="@Model.Pupils_marks[count][i]" /></td>
+}
 
-    </tr>                count++;
-                }
+</tr>
+       count++;
+}
         </table>
         <button type="submit" class="btn btn-info btn-rounded" style="float: right; font-size: 12px;" name="button">
             Сохранить
@@ -83,8 +84,7 @@
             <select class="form-control" style="width:300px" name="dates">
                 @foreach (var cl in ViewBag.days)
                 {
-                    <option>@cl.ToLongDateString()</option>
-                }
+    <option>@cl.ToLongDateString()</option>}
             </select>
         </form>
     </div>
@@ -99,8 +99,7 @@
                         <select class="form-control" name="Subject" id="Subject">
                             @foreach (var cl in ViewBag.subjects)
                             {
-                                <option>@cl</option>
-                            }
+                <option>@cl</option>}
                         </select>
                     </div>
                 </div>
@@ -108,13 +107,12 @@
                     <select class="form-control" name="Quarters" id="Quarters">
                         @foreach (var cl in ViewBag.Quarters)
                         {
-                            <option>@cl</option>
-                        }
+            <option>@cl</option>}
                     </select>
                 </div>
                 <div class="col-md-3 right-col">
                     <button type="submit" class="btn btn-info btn-rounded" style="float: right; font-size: 12px;" name="button">
-                        Просмотр расписания
+                        Просмотр журнала
                     </button> <br />
                 </div>
             </div>

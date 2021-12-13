@@ -31,21 +31,26 @@ namespace WebApplication1.Controllers
             ViewBag.SchoolClassesLetters = db.Class.Select(a => a.ClassLetter).Distinct().ToList();
             return View();
         }
-        public IActionResult CreateTimetable(int Class, string[] Letters)
+        public IActionResult CreateTimetable(int Class, string[] Letters, string Error)
         {
+            ViewBag.Error = Error;
             User user = db.Users.Find(getCurrentUserId());
+            var teachers = (from s in db.Employee
+                            where s.RegistrateSchoolId == user.SchoolId
+                            select s).ToList();
+            ViewBag.teach = teachers;
             ViewBag.Classes = Class;
             var timet = (from s in db.SchoolClasses
                          join cl in db.Class on s.ClassId equals cl.Id
                          join t in db.Timetable on s.Id equals t.SchoolClassesId
                          where Letters.Contains(cl.ClassLetter) && cl.ClassNumber == Class && s.SchoolId == user.SchoolId
-                        select cl.ClassLetter).ToList().Distinct();
+                         select cl.ClassLetter).ToList().Distinct();
             List<string> let = new List<string>();
-            foreach(var l in Letters)
+            foreach (var l in Letters)
             {
                 let.Add(l);
             }
-            foreach(var t in timet)
+            foreach (var t in timet)
             {
                 let.Remove(t);
             }
@@ -63,30 +68,40 @@ namespace WebApplication1.Controllers
                             where s.RegistrateSchoolId == user.SchoolId
                             select s).ToList();
             Class ch_class = db.Class.Where(s => s.ClassNumber == Class && s.ClassLetter == model.Letter).First();
-            SchoolClasses schoolClasses = db.SchoolClasses.Where(s => s.ClassId == ch_class.Id && s.SchoolId == user.SchoolId).First();
-
-            for (int i = 0; i < model.Subject.Count(); i++)
+            int count = db.SchoolClasses.Where(s => s.ClassId == ch_class.Id && s.SchoolId == user.SchoolId).Count();
+            if (count != 0)
             {
-                if (model.Subject[i] != null)
+                SchoolClasses schoolClasses = db.SchoolClasses.Where(s => s.ClassId == ch_class.Id && s.SchoolId == user.SchoolId).First();
+
+                for (int i = 0; i < model.Subject.Count(); i++)
                 {
-                    Timetable timetable = new Timetable
+                    if (model.Subject[i] != null)
                     {
-                        SubjectId = subjects.Where(c => c.Name == model.Subject[i]).Select(c => c.Id).First(),
-                        TeacherId = teachers.Where(t => (t.LastName + " " + t.Name.Substring(0, 1) + "." + t.SecondName.Substring(0, 1) + ".") == model.Teacher[i]).Select(t => t.Id).First(),
-                        SchoolClassesId = schoolClasses.Id,
-                        DayOfWeek = model.DayOfWeek[i],
-                        LessonTime = model.LessonTime[i],
-                        Cabinet = model.Cabinet[i]
-                    };
-                    timetableList.Add(timetable);
+                        Timetable timetable = new Timetable
+                        {
+                            SubjectId = subjects.Where(c => c.Name == model.Subject[i]).Select(c => c.Id).First(),
+                            TeacherId = teachers.Where(t => (t.LastName + " " + t.Name.Substring(0, 1) + "." + t.SecondName.Substring(0, 1) + ".") == model.Teacher[i]).Select(t => t.Id).First(),
+                            SchoolClassesId = schoolClasses.Id,
+                            DayOfWeek = model.DayOfWeek[i],
+                            LessonTime = model.LessonTime[i],
+                            Cabinet = model.Cabinet[i]
+                        };
+                        timetableList.Add(timetable);
+                    }
                 }
+                await db.Timetable.AddRangeAsync(timetableList);
+                await db.SaveChangesAsync();
+                savePdf(user.SchoolId, Class, model.Letter);
+                return RedirectToAction("LoadTimeTable", new { SchoolId = user.SchoolId });
             }
-            await db.Timetable.AddRangeAsync(timetableList);
-            await db.SaveChangesAsync();
-            savePdf(user.SchoolId, Class, model.Letter);
-            return RedirectToAction("LoadTimeTable", new { SchoolId = user.SchoolId });
+            else
+            {
+                string Error = "Этот класс еще не зарегистрирован!";
+                return RedirectToAction("CreateTimetable", new { Class = Class, Letters = Letters, Error = Error });
+            }
+
         }
-        
+
         public void savePdf(int SchoolId, int Class, string Letter)
         {
             var timetable = (from a in db.Timetable
@@ -150,7 +165,7 @@ namespace WebApplication1.Controllers
         public IActionResult LoadTimeTable(int SchoolId)
         {
             DirectoryInfo di = new DirectoryInfo(_hostEnvironment.WebRootPath + "/timetable");
-            FileInfo[] rgFile = di.GetFiles().Where(s=>s.Name.Contains($"{SchoolId}")).ToArray();
+            FileInfo[] rgFile = di.GetFiles().Where(s => s.Name.Contains($"{SchoolId}")).ToArray();
             ViewBag.filesToLoad = rgFile;
             return View();
         }

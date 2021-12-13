@@ -52,6 +52,11 @@
 <h2>Добавление и регистрация учеников</h2>
 <br />
 <br />
+<center>
+    <p style="font-size:26px">
+        @ViewBag.Error
+    </p>
+</center>
 <div class="bo">
     <div class="container">
         <h4>Выберите файл со списком учеников</h4>
@@ -59,59 +64,54 @@
         <br />
         @using (Html.BeginForm("AddPupils", "Pupil", FormMethod.Post, new { enctype = "multipart/form-data", SchoolId = @ViewBag.SchoolId }))
         {
-            @Html.Raw(ViewBag.Error)
-            <span>Excel File </span>
-            <input type="file" name="fileExcel" />
-            <br />
-            <br />
-            <br />
-            <h4>Выберите класс</h4>
-            <br />
-            <br />
-            <div class="row">
-                <div class="col-md-1">
-                    <div class="form-group">
-                        <select class="form-control" asp-for="ClassNumber" name="Classes" id="select">
-                            @foreach (var cl in ViewBag.SchoolClasses)
-                            {
-                                <option>@cl</option>
-                            }
-                        </select>
-                    </div>
-                </div>
-                <div class="col-md-8 right-col">
-                    <div class="form-group">
-                        <select class="form-control" asp-for="ClassLetter" name="Letters" id="select">
-                            @foreach (var cl in ViewBag.SchoolLetters)
-                            {
-                                <option>@cl</option>
-                            }
-                        </select>
-                    </div>
-                </div>
-            </div>
-            @foreach (var cl in ViewBag.Teachers)
-            {
-                <input type="text" value="@cl.Id" name="TeacherId" hidden />
-            }
-            <br />
-            <br />
-            <h4>Выберите классного руководителя</h4>
-            <br />
-            <br />
-            <div class="form-group">
-                <select class="form-control" name="Teachers" id="select">
-                    @foreach (var cl in ViewBag.Teachers)
-                    {
-                        <option>@cl.LastName @cl.Name @cl.SecondName</option>
-                    }
-                </select>
-            </div>
-            <br />
-            <br />
-            <center>
-                <input type="submit" class="registrB" value="Добавить" />
-            </center>
-        }
+@Html.Raw(ViewBag.Error)
+                <span>Excel File </span>
+                                <input type="file" name="fileExcel" />
+                                                <br />
+                                                                <br />
+                                                                                <br />
+                                                                                                <h4>Выберите класс</h4>
+                                                                                                                <br />
+                                                                                                                                <br />
+                                                                                                                                                <div class="row">
+                                                                                                                                                    <div class="col-md-1">
+                                                                                                                                                        <div class="form-group">
+                                                                                                                                                            <select class="form-control" asp-for="ClassNumber" name="Classes" id="select">
+                                                                                                                                                                @foreach (var cl in ViewBag.SchoolClasses)
+                                                                                                                                                                {
+                                                                                                                                                <option>@cl</option>}
+                                                                                                                                                            </select>
+                                                                                                                                                        </div>
+                                                                                                                                                    </div>
+                                                                                                                                                    <div class="col-md-8 right-col">
+                                                                                                                                                        <div class="form-group">
+                                                                                                                                                            <select class="form-control" asp-for="ClassLetter" name="Letters" id="select">
+                                                                                                                                                                @foreach (var cl in ViewBag.SchoolLetters)
+                                                                                                                                                                {
+                                                                                                                                                <option>@cl</option>}
+                                                                                                                                                            </select>
+                                                                                                                                                        </div>
+                                                                                                                                                    </div>
+                                                                                                                                                </div>
+                                                                                                                                                                @foreach (var cl in ViewBag.Teachers)
+                                                                                                                                                                {
+                                                                                                                                                <input type="text" value="@cl.Id" name="TeacherId" hidden />}
+                                                                                                                                                                                <br />
+                                                                                                                                                                                                <br />
+                                                                                                                                                                                                                <h4>Выберите классного руководителя</h4>
+                                                                                                                                                                                                                                <br />
+                                                                                                                                                                                                                                                <br />
+                                                                                                                                                                                                                                                                <div class="form-group">
+                                                                                                                                                                                                                                                                    <select class="form-control" name="Teachers" id="select">
+                                                                                                                                                                                                                                                                        @foreach (var cl in ViewBag.Teachers)
+                                                                                                                                                                                                                                                                        {
+                                                                                                                                                                                                                                                        <option>@cl.LastName @cl.Name @cl.SecondName</option>}
+                                                                                                                                                                                                                                                                    </select>
+                                                                                                                                                                                                                                                                </div>
+                                                                                                                                                                                                                                                                                <br />
+                                                                                                                                                                                                                                                                                                <br />
+                                                                                                                                                                                                                                                                                                                <center>
+                                                                                                                                                                                                                                                                                                                    <input type="submit" class="registrB" value="Добавить" />
+                                                                                                                                                                                                                                                                                                                </center>}
     </div>
 </div>
